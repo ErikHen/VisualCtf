@@ -1,0 +1,82 @@
+﻿@using VisualCtf.ViewModels
+@using VisualCtf.Services
+@inject CtfService CtfService
+
+
+<MudExpansionPanel Text="@VisualType.CtfType.Name" Class="@("highlight-" + Enum.GetName(typeof(HighlightType), VisualType.Highlighted)?.ToLower())"  @bind-IsExpanded="IsExpanded">
+    <div @onclick="@(() => OnClick.InvokeAsync(VisualType.CtfType.SystemProperties.Id))" class="type" >
+
+
+        <table class="infotable">
+            @foreach (var field in VisualType.CtfType.Fields)
+            {
+                <tr>
+                    <td>@field.Name</td>
+                    <td>@CtfService.GetFriendlyTypeName(field)</td>
+                </tr>
+                var refTypes = VisualType.FieldReferences.FirstOrDefault(r => r.fieldName == field.Name);
+                if (refTypes != null)
+                {
+                    <tr>
+                        <td class="smallText" style="font-weight: normal" colspan="2">
+                            Limited to:  
+                            @foreach (var rt in refTypes.referenceTypes)
+                            {
+                                @(AppState.TypeNameMapping.TryGetValue(rt, out var typeName) ? typeName : rt)
+                                <br />
+                            }
+                        </td>
+                    </tr>
+                }
+            }
+        </table>
+        <MudDivider DividerType="DividerType.Middle" Class="my-3" />
+        <div class="smallText">
+            @VisualType.CtfType.Description<br /><br />
+        </div>
+        <table class="infotable smallText">
+            <tr>
+                <td>Type Id</td>
+                <td>@VisualType.CtfType.SystemProperties.Id</td>
+            </tr>
+            <tr>
+                <td></td>
+                <td class="pt-2">
+                    <MudButton Variant="Variant.Outlined" Color="Color.Dark" Target="_ctfedit"
+                        Link="@($"https://app.contentful.com/spaces/{VisualType.CtfType.SystemProperties.Space.SystemProperties.Id}/content_types/{VisualType.CtfType.SystemProperties.Id}/fields")">
+                        Edit
+                    </MudButton>
+                </td>
+            </tr>
+            
+        </table>
+    </div>
+</MudExpansionPanel>
+
+@code
+{
+    [Parameter]
+    public VisualType VisualType { get; set; }
+
+    [Parameter]
+    public AppState AppState { get; set; }
+
+    [Parameter]
+    public EventCallback<string> OnClick { get; set; }
+
+    private bool _isExpanded;
+    public bool IsExpanded
+    {
+        get => _isExpanded;
+        set
+        {
+            _isExpanded = value;
+            if (_isExpanded) //only highlight when expanding
+            {
+                OnClick.InvokeAsync(VisualType.CtfType.SystemProperties.Id);
+            }
+        }
+    }
+
+
+}

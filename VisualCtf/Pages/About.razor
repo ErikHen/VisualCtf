@@ -1,0 +1,60 @@
+﻿@page "/about"
+@using VisualCtf.Services.CtfDelivery
+@using Page = VisualCtf.Services.CtfDelivery.Page
+@using Contentful.Core.Search
+@using Contentful.Core.Models
+
+@inject CtfDeliveryService CtfDelivery
+
+<MudPaper Elevation="0" Class="pa-5">
+    <MudPaper Elevation="0" Style="max-width: 800px">
+        @((MarkupString)_mainBodyHtml)
+    
+        <h2>Why?</h2>
+        <p>
+            The first ever Contentful project I was involved in grew fast in number of content types (currently 100+). It was getting hard for team members to get an overview of what content types existed, what fields they have, and how they relate to each other. It's hard to get this overview in the Contentful web app, or by looking at your code. This information is important when deciding if a new content type should be created, or if an existing content type can be tweaked and used instead.
+            So, I decided to create a simple tool that could visualize our content types. This was done fairly quick, and I realized that it wouldn't be that much of work to make this available to anyone (but of course it was a bit more work than I anticipated ). Since this tool first was intended for internal use only, created with as low effort as possible, it may be a bit rough around the edges. Please let me know if you have any suggestions for improvements.
+        </p>
+        <h2>Is this secure?</h2>
+        <p>
+            It's important that you understand what happens when you give this tool access to fetch your content types from Contentful.
+            The CTF Visualizer will get read-only access to all the content types and content that you have access to, in all your spaces.
+            If you have any sensitive data of any kind in your Contentful spaces you might not want to use this tool (see disclaimer below).
+            <br/>
+            This tool will not be able to change or update anything in your Contentful spaces. When authorizing this tool you can check that the application will be able to “Read your content in all Spaces”, and nothing else.
+            <br/>
+            No data about you, or your Contentful data, is stored in this tool. As soon as you log out, all data that are temporarily stored in memory are erased.
+        </p>
+
+        <h2>Disclaimer</h2>
+        <p>
+            There might be bugs in both mine and Contentful's code. Or a malicious hack may have been performed by aliens. All your data may be sent to a Soviet nuclear sub. 😀<br/>
+            I don't guarantee anything but this:
+            I have done my very best to make this tool secure, and to keep the integrity of its users.
+        </p>
+        <h2>Who made this tool?</h2>
+        <p>
+            My name is Erik, I'm a solutions architect from Sweden, specialized in CMS & web solutions for large organizations. <br/>
+            More about me here: <a href="https://www.linkedin.com/in/erikhenningson/" target="_blank">https://www.linkedin.com/in/erikhenningson/</a>
+        </p>
+    </MudPaper>
+</MudPaper>
+
+
+
+
+
+
+@code {
+    private string _mainBodyHtml;
+
+    protected override async Task OnInitializedAsync()
+    {
+        var htmlRenderer = new HtmlRenderer();
+        var qb = new QueryBuilder<Page>().Include(1);
+        var page = await CtfDelivery.CtfClient.GetEntry("2jJEfEqvQh0BAS2nQgxjeR", qb);
+        _mainBodyHtml = await htmlRenderer.ToHtml(page.MainText);
+
+    }
+
+}
