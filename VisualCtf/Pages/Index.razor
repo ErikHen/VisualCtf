@@ -5,7 +5,7 @@
 @inject CtfService Ctf
 @inject AuthenticationStateProvider AuthenticationStateProvider
 
-<MudPaper Elevation="0" Class="pa-5">
+<MudPaper Elevation="0" Class="pa-5 mb-3">
     <MudGrid Spacing="2" Justify="Justify.FlexStart">
         <MudItem xs="12" md="4" xl="3">
             <h1>Visual CTF</h1>
@@ -14,10 +14,10 @@
         <MudItem xs="12" sm="6" md="4" xl="3">
             <AuthorizeView>
                 <Authorized>
-                    @if (appState.Spaces != null)
+                    @if (_appState.Spaces != null)
                     {
                         <MudSelect T="String" Label="Space" Strict="true" Variant="Variant.Outlined" Format="F2" ValueChanged="ShowTypes">
-                            @foreach (var space in appState.Spaces)
+                            @foreach (var space in _appState.Spaces)
                             {
                                 <MudSelectItem Value="@space.SystemProperties.Id">@space.Name</MudSelectItem>
                             }
@@ -27,7 +27,7 @@
                 <NotAuthorized>
                     <p>
                         Please read the <a href="/about">about section</a> before logging in for the first time.
-                    </p><br/><br />
+                    </p><br/>
                     <MudButton Variant="Variant.Filled" Color="Color.Primary" Link="/account/login/">Log in</MudButton>
 
                 </NotAuthorized>
@@ -36,26 +36,9 @@
         
         <AuthorizeView>
             <Authorized>
-                <MudItem xs="12" sm="6" md="4" Class="py-3 px-5 mud-typography-body1">
-                    <h3>SETTINGS (Todo)</h3>
-                    <MudSwitch Color="Color.Primary" @bind-Checked=@(appState.DoGrouping) Label="Group types" /><br/>
-                    <table>
-                        <tr>
-                            <td><b>Group divider</b></td>
-                            <td> " > " <MudIcon Icon="@(Icons.Filled.Edit)" Size="Size.Small" Style="vertical-align: text-top" /></td>
-                        </tr>
-                        <tr>
-                            <td><b>Order by</b></td>
-                            <td>
-                                <MudForm>
-                                    <MudRadioGroup @bind-SelectedOption="@appState.GroupBy">
-                                        <MudRadio Option="@("name")" Color="Color.Primary">Group name</MudRadio>
-                                        <MudRadio Option="@("size")" Color="Color.Primary">Group size</MudRadio>
-                                    </MudRadioGroup>
-                                </MudForm>
-                            </td>
-                        </tr>
-                    </table>
+                <MudItem xs="12" sm="6" md="4">
+                    <MudSwitch Color="Color.Primary" @bind-Checked=@(_appState.DoGrouping) Label="Group types" /><br />
+                    <Settings AppState="_appState" OnAppStateChanged="OnAppStateChanged" ></Settings>
                 </MudItem>
             </Authorized>
            
@@ -65,23 +48,36 @@
 </MudPaper>
 
 
-@if (appState.TypeGroups != null)
+@if (_appState.TypeGroups != null)
 {
     <MudGrid>
         <MudItem xs="12">
             <MudGrid Spacing="2" Justify="Justify.FlexStart">
-                @foreach (var typeGroup in appState.TypeGroups)
+                @if (_appState.DoGrouping)
                 {
-                    <MudItem xs="12" sm="6" md="3" xl="2">
-                        <h3 style="text-align: center" class="mb-3 mt-5">@typeGroup.Name</h3>
-                        <MudExpansionPanels MultiExpansion="true">
-                            @foreach (var visualType in typeGroup.Types)
-                            {
-                                <VisualCtf.Shared.Type VisualType="visualType" AppState="appState" OnClick="OnTypeClicked"></VisualCtf.Shared.Type>
-                            }
-                        </MudExpansionPanels>
-                    </MudItem>
+                    @foreach (var typeGroup in _appState.TypeGroups)
+                    {
+                        <MudItem xs="12" sm="6" md="3" xl="2">
+                            <h3 style="text-align: center" class="mb-3 mt-3">@typeGroup.Name</h3>
+                            <MudExpansionPanels MultiExpansion="true">
+                                @foreach (var visualType in typeGroup.Types)
+                                {
+                                    <VisualCtf.Shared.Type VisualType="visualType" AppState="_appState" OnClick="OnTypeClicked"></VisualCtf.Shared.Type>
+                                }
+                            </MudExpansionPanels>
+                        </MudItem>
+                    }
                 }
+                else
+                {
+                    @foreach (var visualType in _appState.Types)
+                    {
+                        <MudItem xs="12" sm="6" md="3" xl="2">
+                                <VisualCtf.Shared.Type VisualType="visualType" AppState="_appState" OnClick="OnTypeClicked"></VisualCtf.Shared.Type>
+                        </MudItem>
+                    }
+                }
+
             </MudGrid>
         </MudItem>
     </MudGrid>
@@ -95,10 +91,8 @@
 }
 
 
-
-
 @code {
-    private readonly AppState appState = new();
+    private readonly AppState _appState = new();
     private bool showLoader;
 
     protected override async Task OnInitializedAsync()
@@ -108,8 +102,8 @@
 
         if (apiKey != null)
         {
-            appState.ApiKey = apiKey;
-            appState.Spaces = await Ctf.GetSpaces(apiKey);
+            _appState.ApiKey = apiKey;
+            _appState.Spaces = await Ctf.GetSpaces(apiKey);
         }
     }
 
@@ -118,18 +112,23 @@
         Highlight(typeId, HighlightType.Selected, true);
     }
 
+    void OnAppStateChanged()
+    {
+        this.StateHasChanged();
+    }
+
     public void Highlight(string typeId, HighlightType highlightType, bool highLightReferences = false)
     {
         if (highLightReferences)
         {
             //clear all
-            foreach (var type in appState.TypeGroups.SelectMany(g => g.Types))
+            foreach (var type in _appState.TypeGroups.SelectMany(g => g.Types))
             {
                 type.Highlighted = HighlightType.None;
             }
         }
 
-        var visualType = appState.TypeGroups.SelectMany(g => g.Types.Where(t => t.CtfType.SystemProperties.Id == typeId)).FirstOrDefault();
+        var visualType = _appState.TypeGroups.SelectMany(g => g.Types.Where(t => t.CtfType.SystemProperties.Id == typeId)).FirstOrDefault();
         if (visualType != null)
         {
             visualType.Highlighted = highlightType;
@@ -141,7 +140,7 @@
                     Highlight(reference, HighlightType.SelectedChild);
                 }
                 //highlight parent references
-                foreach (var type in appState.TypeGroups.SelectMany(g => g.Types))
+                foreach (var type in _appState.TypeGroups.SelectMany(g => g.Types))
                 {
                     if (type.FieldReferences.Any(tr => tr.referenceTypes.Any(refId => refId == visualType.CtfType.SystemProperties.Id)))
                     {
@@ -155,8 +154,7 @@
     private async Task ShowTypes(string spaceId)
     {
         showLoader = true;
-        await Ctf.GetTypes(spaceId, appState);
-       // appState.TypeGroups = Ctf.GetTypeGroups(appState.Types);
+        await Ctf.GetTypes(spaceId, _appState);
         showLoader = false;
     }
 }

@@ -1,0 +1,42 @@
+﻿@using VisualCtf.ViewModels
+
+<MudExpansionPanel Text="Settings" HideIcon="true" Class="py-3 px-5 mud-typography-body1">
+    <MudSwitch Color="Color.Primary" @bind-Checked=@(DoGrouping) Label="Group types" /><br />
+    @*<table>
+        <tr>
+            <td><b>Group divider</b></td>
+            <td> " > " <MudIcon Icon="@(Icons.Filled.Edit)" Size="Size.Small" Style="vertical-align: text-top" /></td>
+        </tr>
+        <tr>
+            <td><b>Order by</b></td>
+            <td>
+                <MudForm>
+                    <MudRadioGroup @bind-SelectedOption="@appState.GroupBy">
+                        <MudRadio Option="@("name")" Color="Color.Primary">Group name</MudRadio>
+                        <MudRadio Option="@("size")" Color="Color.Primary">Group size</MudRadio>
+                    </MudRadioGroup>
+                </MudForm>
+            </td>
+        </tr>
+    </table>*@
+</MudExpansionPanel>
+
+@code {
+
+    [Parameter]
+    public AppState AppState { get; set; }
+
+    [Parameter]
+    public EventCallback OnAppStateChanged { get; set; }
+
+    public bool DoGrouping
+    {
+        get => AppState.DoGrouping;
+        set
+        {
+            AppState.DoGrouping = value;
+            OnAppStateChanged.InvokeAsync();
+        }
+    }
+
+}
