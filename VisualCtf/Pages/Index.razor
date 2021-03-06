@@ -3,6 +3,7 @@
 @using VisualCtf.ViewModels
 
 @inject CtfService Ctf
+@inject CacheService CacheSvc
 @inject AuthenticationStateProvider AuthenticationStateProvider
 
 <MudPaper Elevation="0" Class="pa-5 mb-3">
@@ -14,9 +15,9 @@
         <MudItem xs="12" sm="6" md="4" xl="3">
             <AuthorizeView>
                 <Authorized>
-                    @if (_appState.Spaces != null)
+                    @if (_appState?.Spaces != null)
                     {
-                        <MudSelect T="String" Label="Space" Strict="true" Variant="Variant.Outlined" Format="F2" ValueChanged="ShowTypes">
+                        <MudSelect T="String" Label="Space" Strict="true" Variant="Variant.Outlined" Format="F2" ValueChanged="ShowTypes" SelectedValues="new HashSet<string>() {_appState.CurrentSpaceId}">
                             @foreach (var space in _appState.Spaces)
                             {
                                 <MudSelectItem Value="@space.SystemProperties.Id">@space.Name</MudSelectItem>
@@ -48,7 +49,7 @@
 </MudPaper>
 
 
-@if (_appState.TypeGroups != null)
+@if (_appState?.TypeGroups != null)
 {
     <MudGrid>
         <MudItem xs="12">
@@ -92,7 +93,7 @@
 
 
 @code {
-    private readonly AppState _appState = new();
+    private AppState _appState;
     private bool showLoader;
 
     protected override async Task OnInitializedAsync()
@@ -102,8 +103,14 @@
 
         if (apiKey != null)
         {
-            _appState.ApiKey = apiKey;
-            _appState.Spaces = await Ctf.GetSpaces(apiKey);
+            _appState = CacheSvc.GetAppState(apiKey);
+            if (_appState == null)
+            {
+                _appState = new();
+                _appState.ApiKey = apiKey;
+                _appState.Spaces = await Ctf.GetSpaces(apiKey);
+                CacheSvc.CacheAppState(_appState);
+            }
         }
     }
 
@@ -114,6 +121,7 @@
 
     void OnAppStateChanged()
     {
+        CacheSvc.CacheAppState(_appState);
         this.StateHasChanged();
     }
 
@@ -128,7 +136,7 @@
             }
         }
 
-        var visualType = _appState.TypeGroups.SelectMany(g => g.Types.Where(t => t.CtfType.SystemProperties.Id == typeId)).FirstOrDefault();
+        var visualType = _appState.TypeGroups.SelectMany(g => g.Types.Where(t => t.Id == typeId)).FirstOrDefault();
         if (visualType != null)
         {
             visualType.Highlighted = highlightType;
@@ -142,9 +150,9 @@
                 //highlight parent references
                 foreach (var type in _appState.TypeGroups.SelectMany(g => g.Types))
                 {
-                    if (type.FieldReferences.Any(tr => tr.referenceTypes.Any(refId => refId == visualType.CtfType.SystemProperties.Id)))
+                    if (type.FieldReferences.Any(tr => tr.referenceTypes.Any(refId => refId == visualType.Id)))
                     {
-                        Highlight(type.CtfType.SystemProperties.Id, HighlightType.SelectedParent);
+                        Highlight(type.Id, HighlightType.SelectedParent);
                     }
                 }
             }
@@ -154,7 +162,9 @@
     private async Task ShowTypes(string spaceId)
     {
         showLoader = true;
-        await Ctf.GetTypes(spaceId, _appState);
+        _appState.CurrentSpaceId = spaceId;
+        await Ctf.GetTypes(_appState);
+        CacheSvc.CacheAppState(_appState);
         showLoader = false;
     }
 }
