@@ -23,9 +23,11 @@ namespace VisualCtf
         {
             services.AddRazorPages();
             services.AddServerSideBlazor();
+            services.AddMemoryCache();
             services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme).AddCookie();
             services.AddSingleton<CtfService>();
             services.AddSingleton<CtfDeliveryService>();
+            services.AddSingleton<CacheService>();
             services.AddMudServices();
         }
 

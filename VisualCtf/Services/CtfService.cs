@@ -15,12 +15,6 @@ namespace VisualCtf.Services
     {
         private readonly HttpClient _httpClient;
         private string groupNameSeparator = " > ";
-        private readonly Dictionary<string, string> friendlyTypeNames = new()
-        {
-            {"Link", "Reference (1)"},
-            {"ArrayLink", "Reference (many)"},
-            {"Symbol", "Text"}
-        };
 
         public CtfService()
         {
@@ -39,7 +33,7 @@ namespace VisualCtf.Services
             var typeGroups = new List<VisualTypeGroup>();
             foreach (var type in visualTypes)
             {
-                var groupName = GetGroupName(type.CtfType.Name);
+                var groupName = GetGroupName(type.Name);
                 var typeGroup = typeGroups.FirstOrDefault(t => t.Name == groupName);
                 if (typeGroup == null)
                 {
@@ -52,16 +46,17 @@ namespace VisualCtf.Services
             return typeGroups.OrderBy(t => t.Name);
         }
 
-        public async Task GetTypes(string spaceId, AppState appState)
+        public async Task GetTypes(AppState appState)
         {
-            var ctfClient = new ContentfulManagementClient(_httpClient, new ContentfulOptions { ManagementApiKey = appState.ApiKey, SpaceId = spaceId });
-            var ctfTypes = (await ctfClient.GetContentTypes()).ToList();
+            var ctfClient = new ContentfulManagementClient(_httpClient, new ContentfulOptions { ManagementApiKey = appState.ApiKey, SpaceId = appState.CurrentSpaceId });
+            var ctfTypes = (await ctfClient.GetContentTypes()).OrderBy(c => c.Name).ToList();
             appState.TypeGroups = GetTypeGroups(ctfTypes.Select(c => new VisualType(c)));
             appState.TypeNameMapping = new Dictionary<string, string>();
             foreach (var type in ctfTypes)
             {
                 appState.TypeNameMapping.Add(type.SystemProperties.Id, type.Name);
             }
+            
         }
 
         public async Task<IEnumerable<Space>> GetSpaces(string key)
@@ -77,17 +72,6 @@ namespace VisualCtf.Services
         //    var token = (await ctfClient.GetAllManagementTokens()).Where(t => t.Name != "qwe");
         //    var ctfSpaces = await ctfClient.GetUser("qwe"); // .RevokeManagementToken(key);
         //}
-
-        public string GetFriendlyTypeName(Field field)
-        {
-
-            if (!friendlyTypeNames.TryGetValue(field.Type + field.Items?.Type, out var friendlyName))
-            {
-                friendlyName = field.Type;
-            }
-
-            return friendlyName;
-        }
 
         private string GetGroupName(string ctfTypeName)
         {
