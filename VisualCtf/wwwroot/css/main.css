@@ -14,7 +14,6 @@ body {
     margin-bottom: 10px;
 }
 
-
 p a {
     text-decoration: underline;
 }
@@ -42,7 +41,7 @@ p a {
     cursor: pointer;
 }
     .type hr {
-        border-top: 1px solid #6C4242;
+        border-top: 1px solid #788e8d;
     }
 
 .smallText {

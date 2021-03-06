@@ -8,16 +8,6 @@ namespace VisualCtf.ViewModels
         public string Type { get; set; }
         public string ArrayType { get; set; }
         public string FriendlyTypeName { get; set; }
-        //{
-        //    get
-        //    {
-        //        if (!_friendlyTypeNames.TryGetValue(Type + ArrayType, out var friendlyName))
-        //        {
-        //            friendlyName = Type;
-        //        }
-        //        return friendlyName;
-        //    }
-        //}
 
         public VisualField(Field ctfField)
         {
