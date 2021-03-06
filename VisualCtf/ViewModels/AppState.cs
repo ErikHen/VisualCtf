@@ -20,11 +20,12 @@ namespace VisualCtf.ViewModels
         public IEnumerable<Space> Spaces { get; set; }
         public string CurrentSpaceId { get; set; }
         public bool DoGrouping { get; set; }
-        public string GroupBy { get; set; } = "name";
+        public string SortGroupBy { get; set; }
 
         public AppState()
         {
            DoGrouping = true;
+           SortGroupBy = "name";
         }
     }
 }

@@ -1,24 +1,33 @@
 ﻿@using VisualCtf.ViewModels
 
-<MudExpansionPanel Text="Settings" HideIcon="true" Class="py-3 px-5 mud-typography-body1">
-    <MudSwitch Color="Color.Primary" @bind-Checked=@(DoGrouping) Label="Group types" /><br />
-    @*<table>
+<MudExpansionPanel Text="SETTINGS" HideIcon="true" Class=" mud-typography-body1">
+    <TitleContent>
+        @*<MudTooltip Text="Show/hide settings" Placement="Placement.Top">*@
+            <div class="d-flex">
+                <MudIcon Icon="@Icons.Material.Filled.Settings" class="mr-2"></MudIcon>
+                <MudText><strong>SETTINGS</strong></MudText>
+            </div>
+        @*</MudTooltip>*@
+    </TitleContent>
+    <ChildContent>
+        <MudSwitch Color="Color.Primary" @bind-Checked=@(DoGrouping) Label="Group types" /><br />
+        @*<table>
         <tr>
-            <td><b>Group divider</b></td>
-            <td> " > " <MudIcon Icon="@(Icons.Filled.Edit)" Size="Size.Small" Style="vertical-align: text-top" /></td>
+            <td><b>Group divider</b>
+             " > " <MudTooltip Text="Edit divider" Placement="Placement.Top"><MudIconButton Icon="@(Icons.Filled.Edit)" Size="Size.Small" Disabled="@(!DoGrouping)" Style="vertical-align: text-top" /></MudTooltip></td>
         </tr>
         <tr>
-            <td><b>Order by</b></td>
-            <td>
-                <MudForm>
-                    <MudRadioGroup @bind-SelectedOption="@appState.GroupBy">
-                        <MudRadio Option="@("name")" Color="Color.Primary">Group name</MudRadio>
-                        <MudRadio Option="@("size")" Color="Color.Primary">Group size</MudRadio>
-                    </MudRadioGroup>
-                </MudForm>
-            </td>
-        </tr>
-    </table>*@
+            <td><b>Order by</b>*@
+        <b class="mr-5">Order by</b>
+        <MudRadioGroup @bind-SelectedOption="@SortGroupBy">
+            <MudRadio Option="@("name")" Color="Color.Primary" Disabled="@(!DoGrouping)">Group name</MudRadio>
+            <MudRadio Option="@("size")" Color="Color.Primary" Disabled="@(!DoGrouping)">Group size</MudRadio>
+        </MudRadioGroup>
+        @*</td>
+            </tr>
+        </table>*@
+    </ChildContent>
+    
 </MudExpansionPanel>
 
 @code {
@@ -29,12 +38,22 @@
     [Parameter]
     public EventCallback OnAppStateChanged { get; set; }
 
-    public bool DoGrouping
+    private bool DoGrouping
     {
         get => AppState.DoGrouping;
         set
         {
             AppState.DoGrouping = value;
+            OnAppStateChanged.InvokeAsync();
+        }
+    }
+
+    private string SortGroupBy
+    {
+        get => AppState.SortGroupBy;
+        set
+        {
+            AppState.SortGroupBy = value;
             OnAppStateChanged.InvokeAsync();
         }
     }
