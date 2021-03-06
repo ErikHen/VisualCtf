@@ -12,17 +12,21 @@
             <h1>Visual CTF</h1>
             <p>Quickly get an overview of your Contentful content types.</p>
         </MudItem>
-        <MudItem xs="12" sm="6" md="4" xl="3">
+        <MudItem xs="12" sm="6" md="4" xl="3" Class="d-flex justify-space-between">
             <AuthorizeView>
                 <Authorized>
                     @if (_appState?.Spaces != null)
                     {
-                        <MudSelect T="String" Label="Space" Strict="true" Variant="Variant.Outlined" Format="F2" ValueChanged="ShowTypes" SelectedValues="new HashSet<string>() {_appState.CurrentSpaceId}">
+                        <MudSelect T="String" Label="Space" Strict="true" Variant="Variant.Outlined" Format="F2" ValueChanged="LoadTypes" SelectedValues="new HashSet<string>() {_appState.CurrentSpaceId}">
                             @foreach (var space in _appState.Spaces)
                             {
                                 <MudSelectItem Value="@space.SystemProperties.Id">@space.Name</MudSelectItem>
                             }
                         </MudSelect>
+                    }
+                    @if (_appState?.TypeGroups != null)
+                    {
+                        <MudIconButton Icon="@Icons.Material.Filled.Refresh" OnClick="() => LoadTypes(_appState.CurrentSpaceId)"  />
                     }
                 </Authorized>
                 <NotAuthorized>
@@ -159,7 +163,7 @@
         }
     }
 
-    private async Task ShowTypes(string spaceId)
+    private async Task LoadTypes(string spaceId)
     {
         showLoader = true;
         _appState.CurrentSpaceId = spaceId;

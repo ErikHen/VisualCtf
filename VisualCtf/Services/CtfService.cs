@@ -49,7 +49,7 @@ namespace VisualCtf.Services
         public async Task GetTypes(AppState appState)
         {
             var ctfClient = new ContentfulManagementClient(_httpClient, new ContentfulOptions { ManagementApiKey = appState.ApiKey, SpaceId = appState.CurrentSpaceId });
-            var ctfTypes = (await ctfClient.GetContentTypes()).ToList();
+            var ctfTypes = (await ctfClient.GetContentTypes()).OrderBy(c => c.Name).ToList();
             appState.TypeGroups = GetTypeGroups(ctfTypes.Select(c => new VisualType(c)));
             appState.TypeNameMapping = new Dictionary<string, string>();
             foreach (var type in ctfTypes)
