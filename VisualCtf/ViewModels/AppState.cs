@@ -21,11 +21,13 @@ namespace VisualCtf.ViewModels
         public string CurrentSpaceId { get; set; }
         public bool DoGrouping { get; set; }
         public string SortGroupBy { get; set; }
+        public string GroupNameSeparator { get; set; }
 
         public AppState()
         {
            DoGrouping = true;
            SortGroupBy = "name";
+           GroupNameSeparator = " > ";
         }
     }
 }
