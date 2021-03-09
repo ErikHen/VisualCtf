@@ -39,17 +39,16 @@
                 <td>Type Id</td>
                 <td>@VisualType.Id</td>
             </tr>
-            <tr>
-                <td></td>
-                <td class="pt-2">
-                    <MudButton Variant="Variant.Outlined" Color="Color.Dark" Target="_ctfedit"
-                        Link="@($"https://app.contentful.com/spaces/{VisualType.SpaceId}/content_types/{VisualType.Id}/fields")">
-                        Edit
-                    </MudButton>
-                </td>
-            </tr>
-            
         </table>
+        <div class="d-flex flex-row-reverse mt-2">
+            <MudButton Variant="Variant.Text" Color="Color.Dark" Target="_ctfedit" Link="@($"https://app.contentful.com/spaces/{VisualType.SpaceId}/content_types/{VisualType.Id}/fields")" Class="ml-3">
+                Edit
+            </MudButton>
+            <MudButton Variant="Variant.Text" Color="Color.Dark" Target="_ctfentries" Link="@($"https://app.contentful.com/spaces/{VisualType.SpaceId}/entries?contentTypeId={VisualType.Id}")">
+                View entries
+            </MudButton>
+
+        </div>
     </div>
 </MudExpansionPanel>
 

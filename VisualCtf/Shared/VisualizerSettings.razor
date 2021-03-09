@@ -10,14 +10,24 @@
         @*</MudTooltip>*@
     </TitleContent>
     <ChildContent>
-        <MudSwitch Color="Color.Primary" @bind-Checked=@(DoGrouping) Label="Group types" /><br />
-        @*<table>
-        <tr>
-            <td><b>Group divider</b>
-             " > " <MudTooltip Text="Edit divider" Placement="Placement.Top"><MudIconButton Icon="@(Icons.Filled.Edit)" Size="Size.Small" Disabled="@(!DoGrouping)" Style="vertical-align: text-top" /></MudTooltip></td>
-        </tr>
-        <tr>
-            <td><b>Order by</b>*@
+        <MudSwitch Color="Color.Primary" @bind-Checked=@(_doGrouping) Label="Group types" /><br />
+        
+        <MudPaper Elevation="0">
+            <b>Group name separator</b> "@GroupNameSeparator" 
+            <MudTooltip Text="Edit separator " Placement="Placement.Top"><MudIconButton Icon="@(Icons.Filled.Edit)" Size="Size.Small" Disabled="@(!_doGrouping)" OnClick="@(() => _editSeparator = true)" /></MudTooltip>
+        
+            <MudPopover Open="@_editSeparator" Class="px-4 pt-4" Style="width:400px;">
+                    <MudText Class="mb-4">
+                        Set the characters that are used as separator when grouping the content types.
+
+                    </MudText>
+                    <MudTextField @bind-Value="@GroupNameSeparator" Label="Group name separator" Variant="Variant.Outlined" Margin="@Margin.Dense" FullWidth="false" ></MudTextField>
+
+                    <MudButton OnClick="@(() => {GroupNameSeparator = " > "; _editSeparator = false;  })" Class="">Reset</MudButton>
+                    <MudButton OnClick="@(() => { _editSeparator = false;  })" Class="">OK</MudButton>
+            </MudPopover>
+        </MudPaper>
+
         <b class="mr-5">Order by</b>
         <MudRadioGroup @bind-SelectedOption="@SortGroupBy">
             <MudRadio Option="@("name")" Color="Color.Primary" Disabled="@(!DoGrouping)">Group name</MudRadio>
