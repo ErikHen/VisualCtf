@@ -14,7 +14,7 @@
         
         <MudPaper Elevation="0">
             <b>Group name separator</b> "@GroupNameSeparator" 
-            <MudTooltip Text="Edit divider" Placement="Placement.Top"><MudIconButton Icon="@(Icons.Filled.Edit)" Size="Size.Small" Disabled="@(!_doGrouping)" OnClick="@(() => _editSeparator = true)" /></MudTooltip>
+            <MudTooltip Text="Edit separator " Placement="Placement.Top"><MudIconButton Icon="@(Icons.Filled.Edit)" Size="Size.Small" Disabled="@(!_doGrouping)" OnClick="@(() => _editSeparator = true)" /></MudTooltip>
         
             <MudPopover Open="@_editSeparator" Class="px-4 pt-4" Style="width:400px;">
                     <MudText Class="mb-4">
