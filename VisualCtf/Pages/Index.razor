@@ -70,7 +70,7 @@
                             <MudExpansionPanels MultiExpansion="true">
                                 @foreach (var visualType in typeGroup.Types)
                                 {
-                                    <VisualCtf.Shared.Type VisualType="visualType" AppState="_appState" OnClick="OnTypeClicked"></VisualCtf.Shared.Type>
+                                    <VisualCtf.Shared.Type VisualType="visualType" AppState="_appState" OnClick="OnTypeClicked" ></VisualCtf.Shared.Type>
                                 }
                             </MudExpansionPanels>
                         </MudItem>
@@ -81,7 +81,7 @@
                     @foreach (var visualType in _appState.Types)
                     {
                         <MudItem xs="12" sm="6" md="3" xl="2">
-                                <VisualCtf.Shared.Type VisualType="visualType" AppState="_appState" OnClick="OnTypeClicked"></VisualCtf.Shared.Type>
+                                <VisualCtf.Shared.Type VisualType="visualType" AppState="_appState" OnClick="OnTypeClicked" ></VisualCtf.Shared.Type>
                         </MudItem>
                     }
                 }
@@ -174,5 +174,7 @@
         CacheSvc.CacheAppState(_appState);
         showLoader = false;
     }
+
+    
 }
 
