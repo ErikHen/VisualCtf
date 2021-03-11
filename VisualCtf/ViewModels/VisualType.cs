@@ -8,7 +8,6 @@ namespace VisualCtf.ViewModels
 {
     public class VisualType : VisualBase
     {
-        //public ContentType CtfType { get; set; }
         public string Description { get; set; }
         public string SpaceId { get; set; }
         public IEnumerable<VisualField> Fields { get; set; }
@@ -18,7 +17,6 @@ namespace VisualCtf.ViewModels
 
         public VisualType(ContentType ctfType)
         {
-            //CtfType = ctfType;
             Id = ctfType.SystemProperties.Id;
             Name = ctfType.Name;
             Description = ctfType.Description;
