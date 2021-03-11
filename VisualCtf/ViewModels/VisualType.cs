@@ -14,6 +14,7 @@ namespace VisualCtf.ViewModels
         public IEnumerable<VisualField> Fields { get; set; }
         public IEnumerable<FieldReference> FieldReferences { get; set; }
         public HighlightType Highlighted { get; set; }
+        public bool IsExpanded { get; set; }
 
         public VisualType(ContentType ctfType)
         {

@@ -3,10 +3,8 @@
 @inject CtfService CtfService
 
 
-<MudExpansionPanel Text="@VisualType.Name" Class="@("highlight-" + Enum.GetName(typeof(HighlightType), VisualType.Highlighted)?.ToLower())"  @bind-IsExpanded="IsExpanded">
-    <div @onclick="@(() => OnClick.InvokeAsync(VisualType.Id))" class="type" >
-
-
+<MudExpansionPanel Text="@VisualType.Name" Class="@("highlight-" + Enum.GetName(typeof(HighlightType), VisualType.Highlighted)?.ToLower())"  @bind-IsExpanded="@_isPanelExpanded" >
+    <div @onclick="@(() => OnClick.InvokeAsync(VisualType.Id))" class="type">
         <table class="infotable">
             @foreach (var field in VisualType.Fields)
             {
@@ -19,7 +17,7 @@
                 {
                     <tr>
                         <td class="smallText" style="font-weight: normal" colspan="2">
-                            Limited to:  
+                            Limited to:
                             @foreach (var rt in refTypes.referenceTypes)
                             {
                                 @(AppState.TypeNameMapping.TryGetValue(rt, out var typeName) ? typeName : rt)
@@ -63,19 +61,17 @@
     [Parameter]
     public EventCallback<string> OnClick { get; set; }
 
-    private bool _isExpanded;
-    public bool IsExpanded
+    private bool _isPanelExpanded
     {
-        get => _isExpanded;
+        get => VisualType.IsExpanded;
         set
         {
-            _isExpanded = value;
-            if (_isExpanded) //only highlight when expanding
+            VisualType.IsExpanded = value;
+            if (VisualType.IsExpanded) //only highlight when expanding
             {
                 OnClick.InvokeAsync(VisualType.Id);
             }
+
         }
     }
-
-
 }
