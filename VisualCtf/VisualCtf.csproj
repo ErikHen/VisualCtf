@@ -6,6 +6,10 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Services\CtfDelivery\CtfPage.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="contentful.csharp" Version="6.0.1" />
     <PackageReference Include="Microsoft.Extensions.Caching.Memory" Version="5.0.0" />
     <PackageReference Include="MudBlazor" Version="5.0.2" />

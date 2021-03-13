@@ -1,9 +1,13 @@
 ﻿@page "/"
+@using VisualCtf.Services.CtfDelivery
 @model VisualCtf.Pages._HostModel
 @namespace VisualCtf.Pages
 @addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+@inject CtfDeliveryService CtfDelivery
+
 @{
     Layout = null;
+    var page = await CtfDelivery.GetPage(HttpContext.Request.Path);
 }
 
 <!DOCTYPE html>
@@ -11,7 +15,7 @@
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Visual CTF - Contentful visualizer</title>
+    <title>Visual CTF - Contentful visualizer @(string.IsNullOrWhiteSpace(page?.PageName) ? string.Empty : "- " + page.PageName)</title>
     <base href="~/" />
     <link href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700&display=swap" rel="stylesheet" />
     <link href="_content/MudBlazor/MudBlazor.min.css" rel="stylesheet" />
@@ -29,7 +33,7 @@
     <meta name="theme-color" content="#ffffff">
 
     <meta property="og:title" content="Visual CTF - Contentful visualizer" />
-    <meta property="og:description" content="Visualize your Contentful content types." />
+    <meta property="og:description" content=" @(string.IsNullOrWhiteSpace(page?.SeoInformation?.MetaDescription) ? "Visualize your Contentful content types." : page.SeoInformation.MetaDescription)" />
     <meta property="og:image" content="https://visualctf.app/favicon/VisualCTF_logo.png" />
 </head>
 <body>

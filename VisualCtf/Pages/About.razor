@@ -12,21 +12,13 @@
     </MudPaper>
 </MudPaper>
 
-
-
-
-
-
 @code {
     private string _mainBodyHtml;
 
     protected override async Task OnInitializedAsync()
     {
+        var page = await CtfDelivery.GetPage("/about");
         var htmlRenderer = new HtmlRenderer();
-        var qb = new QueryBuilder<Page>().Include(1);
-        var page = await CtfDelivery.CtfClient.GetEntry("2jJEfEqvQh0BAS2nQgxjeR", qb);
         _mainBodyHtml = await htmlRenderer.ToHtml(page.MainText);
-
     }
-
 }

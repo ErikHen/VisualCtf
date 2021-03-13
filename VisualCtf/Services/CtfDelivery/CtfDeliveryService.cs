@@ -1,7 +1,11 @@
-﻿using Contentful.Core;
+﻿using System.Collections.Generic;
+using System.Linq;
+using Contentful.Core;
 using Contentful.Core.Configuration;
 using Microsoft.Extensions.Configuration;
 using System.Net.Http;
+using System.Threading.Tasks;
+using Contentful.Core.Search;
 
 namespace VisualCtf.Services.CtfDelivery
 {
@@ -11,15 +15,35 @@ namespace VisualCtf.Services.CtfDelivery
     /// </summary>
     public class CtfDeliveryService
     {
-        private readonly IConfiguration _configuration;
+        private ContentfulClient CtfClient { get; set; }
+        private readonly CacheService _cacheService;
 
-        public CtfDeliveryService(IConfiguration configuration)
+        public CtfDeliveryService(IConfiguration configuration, CacheService cacheService)
         {
-            _configuration = configuration;
-            CtfClient = new ContentfulClient(new HttpClient(), new ContentfulOptions { DeliveryApiKey = _configuration["DeliveryApiKey"], SpaceId = _configuration["DeliverySpaceId"] });
+            _cacheService = cacheService;
+            CtfClient = new ContentfulClient(new HttpClient(), new ContentfulOptions { DeliveryApiKey = configuration["DeliveryApiKey"], SpaceId = configuration["DeliverySpaceId"]})
+            {
+                ResolveEntriesSelectively = true
+            };
         }
 
-        public ContentfulClient CtfClient { get; set; }
+        public async Task<Page> GetPage(string slug)
+        {
+            return (await GetPages()).FirstOrDefault(p => p.Slug == slug);
+        }
+
+        private async Task<IEnumerable<Page>> GetPages()
+        {
+            var pages = _cacheService.GetPages();
+            if (pages == null)
+            {
+                var qb = new QueryBuilder<Page>();
+                pages = (await CtfClient.GetEntriesByType("pageStandardPage", qb)).Items;
+                _cacheService.CachePages(pages);
+            }
+
+            return pages;
+        }
 
     }
 }
