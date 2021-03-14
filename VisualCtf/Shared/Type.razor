@@ -9,35 +9,52 @@
             @foreach (var field in VisualType.Fields)
             {
                 <tr>
-                    <td>@field.Name</td>
-                    <td>@field.FriendlyTypeName</td>
-                </tr>
-                var refTypes = VisualType.FieldReferences.FirstOrDefault(r => r.fieldName == field.Name);
-                if (refTypes != null)
-                {
-                    <tr>
-                        <td class="smallText" style="font-weight: normal" colspan="2">
-                            Limited to:
-                            @foreach (var rt in refTypes.referenceTypes)
+                    <td>
+                        @field.Name
+                        @if (VisualType.ShowDetails)
+                        {
+                            <br /><span class="smallText" style="font-weight: normal">Id: @field.Id</span>
+                        }
+                    </td>
+                    <td>
+                        @field.FriendlyTypeName
+                        @if (VisualType.ShowDetails)
+                        {
+                            var refTypes = VisualType.FieldReferences.FirstOrDefault(r => r.fieldName == field.Name);
+                            if (refTypes != null)
                             {
-                                @(AppState.TypeNameMapping.TryGetValue(rt, out var typeName) ? typeName : rt)
-                                <br />
+                                <span class="smallText" style="font-weight: normal"><br />Limited to:
+                                @foreach (var rt in refTypes.referenceTypes)
+                                {
+                                    @(AppState.TypeNameMapping.TryGetValue(rt, out var typeName) ? typeName : rt)<br />
+
+                                }
+                                </span>
                             }
-                        </td>
-                    </tr>
-                }
+                        }
+                    </td>
+                </tr>
             }
         </table>
+
         <MudDivider DividerType="DividerType.Middle" Class="my-3" />
         <div class="smallText">
             @VisualType.Description<br /><br />
         </div>
-        <table class="infotable smallText">
-            <tr>
-                <td>Type Id</td>
-                <td>@VisualType.Id</td>
-            </tr>
-        </table>
+        @if (VisualType.ShowDetails)
+        {
+            <table class="infotable smallText">
+                <tr>
+                    <td>Type Id</td>
+                    <td>@VisualType.Id</td>
+                </tr>
+            </table>
+        }
+    <div class="d-flex justify-space-between" style="align-items: center;" @onclick:stopPropagation="true">
+        <span class="smallText">Show more details</span>
+        <MudSwitch Color="Color.Primary" @bind-Checked=@(VisualType.ShowDetails) Style="margin-right: 0" />
+
+    </div>
         <div class="d-flex flex-row-reverse mt-2">
             <MudButton Variant="Variant.Text" Color="Color.Dark" Target="_ctfedit" Link="@($"https://app.contentful.com/spaces/{VisualType.SpaceId}/content_types/{VisualType.Id}/fields")" Class="ml-3">
                 Edit
