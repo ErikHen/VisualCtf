@@ -53,6 +53,7 @@ p a {
 }
     .infotable td {
         vertical-align: top;
+        padding-bottom: 4px;
     }
 
         .infotable td:first-child {
