@@ -19,6 +19,7 @@
     {
         var page = await CtfDelivery.GetPage("/about");
         var htmlRenderer = new HtmlRenderer();
+        htmlRenderer.AddRenderer(new LinkContentRenderer { Order = 10 });
         _mainBodyHtml = await htmlRenderer.ToHtml(page.MainText);
     }
 }
