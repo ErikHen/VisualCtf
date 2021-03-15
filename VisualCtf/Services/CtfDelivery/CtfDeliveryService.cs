@@ -5,6 +5,7 @@ using Contentful.Core.Configuration;
 using Microsoft.Extensions.Configuration;
 using System.Net.Http;
 using System.Threading.Tasks;
+using Contentful.Core.Models;
 using Contentful.Core.Search;
 
 namespace VisualCtf.Services.CtfDelivery
@@ -17,6 +18,7 @@ namespace VisualCtf.Services.CtfDelivery
     {
         private ContentfulClient CtfClient { get; set; }
         private readonly CacheService _cacheService;
+        private HtmlRenderer _htmlRenderer;
 
         public CtfDeliveryService(IConfiguration configuration, CacheService cacheService)
         {
@@ -25,6 +27,8 @@ namespace VisualCtf.Services.CtfDelivery
             {
                 ResolveEntriesSelectively = true
             };
+            _htmlRenderer = new HtmlRenderer();
+            _htmlRenderer.AddRenderer(new LinkContentRenderer {Order = 10});
         }
 
         public async Task<Page> GetPage(string slug)
@@ -39,11 +43,18 @@ namespace VisualCtf.Services.CtfDelivery
             {
                 var qb = new QueryBuilder<Page>();
                 pages = (await CtfClient.GetEntriesByType("pageStandardPage", qb)).Items;
+                    //.Select(x =>
+                    //{
+                    //    x.MainTextHtml = _htmlRenderer.ToHtml(x.MainText).Result;
+                    //    return x;
+                    //});
                 _cacheService.CachePages(pages);
             }
 
             return pages;
         }
+
+
 
     }
 }

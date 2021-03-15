@@ -14,5 +14,7 @@ namespace VisualCtf.Services.CtfDelivery
         public string Slug { get; set; }
         public Document MainText { get; set; }
         public SeoInfo SeoInformation { get; set; }
+
+        public string MainTextHtml { get; set; }
     }
 }
