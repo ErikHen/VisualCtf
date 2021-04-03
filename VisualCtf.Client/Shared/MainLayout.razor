@@ -1,0 +1,48 @@
+﻿@inherits LayoutComponentBase
+
+<MudThemeProvider Theme="MyCustomTheme"  />
+
+<MudLayout>
+    <MudAppBar Elevation="1">
+        <MudIconButton Icon="@Icons.Material.Filled.Menu" Color="Color.Inherit" Edge="Edge.Start" OnClick="@DrawerToggle" />
+        <MudAppBarSpacer />
+        <AuthorizeView>
+            <Authorized>
+                @context.User.Identity?.Name &nbsp;<MudButton Variant="Variant.Filled" Color="Color.Secondary" Link="/account/logout/">Log out</MudButton>
+            </Authorized>
+            <NotAuthorized>
+                <MudButton Variant="Variant.Filled" Color="Color.Secondary" Link="/account/login/">Log in</MudButton>
+            </NotAuthorized>
+        </AuthorizeView>
+    </MudAppBar>
+    <MudDrawer @bind-Open="_drawerOpen" Elevation="2">
+        <MudDrawerHeader>
+            <MudText Typo="Typo.h5" Class="mt-1">Visual CTF</MudText>
+        </MudDrawerHeader>
+        <NavMenu />
+    </MudDrawer>
+    <MudMainContent>
+        <div class="pa-6">
+            @*@Body*@ Erik
+        </div>
+    </MudMainContent>
+</MudLayout>
+@code {
+    bool _drawerOpen;
+
+    void DrawerToggle()
+    {
+        _drawerOpen = !_drawerOpen;
+    }
+
+    readonly MudTheme MyCustomTheme = new()
+    {
+        Palette = new Palette
+        {
+            Primary = Colors.Teal.Default,
+            Secondary = Colors.Teal.Lighten2,
+            AppbarBackground = Colors.Teal.Default,
+        },
+    };
+}
+
