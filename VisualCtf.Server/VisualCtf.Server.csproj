@@ -15,9 +15,5 @@
     <ProjectReference Include="..\VisualCtf.Shared\VisualCtf.Shared.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Controllers\" />
-  </ItemGroup>
-
 
 </Project>

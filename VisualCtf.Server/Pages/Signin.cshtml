@@ -1,0 +1,28 @@
+﻿@page
+
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <title>Sign in</title>
+</head>
+<body>
+    <script>
+        window.onload = function () {
+            const token = getHashValue('access_token');
+            if (token) {
+                window.location.href = '/account/login/' + token;
+            }
+        }
+
+        function getHashValue(key) {
+            const keyAndHash = location.hash.toLowerCase().match(new RegExp(key + '=([^&]*)'));
+            var value = '';
+            if (keyAndHash) {
+                value = keyAndHash[1];
+            }
+            return value;
+        }
+    </script>   
+</body>
+</html>
