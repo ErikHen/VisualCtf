@@ -14,7 +14,12 @@ namespace VisualCtf.Services
     public class CtfService
     {
         private readonly HttpClient _httpClient;
-        private string groupNameSeparator = " > ";
+        private readonly Dictionary<string, string> friendlyTypeNames = new()
+        {
+            {"Link", "Reference (1)"},
+            {"ArrayLink", "Reference (many)"},
+            {"Symbol", "Text"}
+        };
 
         public CtfService()
         {
@@ -28,12 +33,12 @@ namespace VisualCtf.Services
             return user;
         }
 
-        private IEnumerable<VisualTypeGroup> GetTypeGroups(IEnumerable<VisualType> visualTypes)
+        private IEnumerable<VisualTypeGroup> GetTypeGroups(IEnumerable<VisualType> visualTypes, string groupNameSeparator)
         {
             var typeGroups = new List<VisualTypeGroup>();
             foreach (var type in visualTypes)
             {
-                var groupName = GetGroupName(type.Name);
+                var groupName = GetGroupName(type.Name, groupNameSeparator);
                 var typeGroup = typeGroups.FirstOrDefault(t => t.Name == groupName);
                 if (typeGroup == null)
                 {
@@ -50,7 +55,7 @@ namespace VisualCtf.Services
         {
             var ctfClient = new ContentfulManagementClient(_httpClient, new ContentfulOptions { ManagementApiKey = appState.ApiKey, SpaceId = appState.CurrentSpaceId });
             var ctfTypes = (await ctfClient.GetContentTypes()).OrderBy(c => c.Name).ToList();
-            appState.TypeGroups = GetTypeGroups(ctfTypes.Select(c => new VisualType(c)));
+            appState.TypeGroups = GetTypeGroups(ctfTypes.Select(c => new VisualType(c)), appState.GroupNameSeparator);
             appState.TypeNameMapping = new Dictionary<string, string>();
             foreach (var type in ctfTypes)
             {
@@ -73,7 +78,7 @@ namespace VisualCtf.Services
         //    var ctfSpaces = await ctfClient.GetUser("qwe"); // .RevokeManagementToken(key);
         //}
 
-        private string GetGroupName(string ctfTypeName)
+        private static string GetGroupName(string ctfTypeName, string groupNameSeparator)
         {
             var position = ctfTypeName.LastIndexOf(groupNameSeparator, StringComparison.InvariantCulture);
             return position == -1 ? "Other" : ctfTypeName.Substring(0, position);

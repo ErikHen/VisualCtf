@@ -30,12 +30,10 @@
 
         <b class="mr-5">Order by</b>
         <MudRadioGroup @bind-SelectedOption="@SortGroupBy">
-            <MudRadio Option="@("name")" Color="Color.Primary" Disabled="@(!DoGrouping)">Group name</MudRadio>
-            <MudRadio Option="@("size")" Color="Color.Primary" Disabled="@(!DoGrouping)">Group size</MudRadio>
+            <MudRadio Option="@("name")" Color="Color.Primary" Disabled="@(!_doGrouping)">Group name</MudRadio>
+            <MudRadio Option="@("size")" Color="Color.Primary" Disabled="@(!_doGrouping)">Group size</MudRadio>
         </MudRadioGroup>
-        @*</td>
-            </tr>
-        </table>*@
+        
     </ChildContent>
     
 </MudExpansionPanel>
@@ -46,9 +44,9 @@
     public AppState AppState { get; set; }
 
     [Parameter]
-    public EventCallback OnAppStateChanged { get; set; }
+    public EventCallback<bool> OnAppStateChanged { get; set; }
 
-    private bool DoGrouping
+    private bool _doGrouping
     {
         get => AppState.DoGrouping;
         set
@@ -68,4 +66,16 @@
         }
     }
 
+
+    private string GroupNameSeparator
+        {
+            get => AppState.GroupNameSeparator;
+            set
+            {
+                AppState.GroupNameSeparator = value;
+                OnAppStateChanged.InvokeAsync(true);
+            }
+        }
+
+    private bool _editSeparator;
 }

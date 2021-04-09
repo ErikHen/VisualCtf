@@ -1,6 +1,7 @@
 ﻿@page "/"
 @using VisualCtf.Services
 @using VisualCtf.ViewModels
+@using VisualCtf.Shared
 
 @inject CtfService Ctf
 @inject CacheService CacheSvc
@@ -44,7 +45,7 @@
                     <p>
                         Login with your regular Contentful username and password. <br />
                         Please read the <a href="/about">about section</a> before logging in for the first time.
-                    </p><br/>
+                    </p><br />
                     <MudButton Variant="Variant.Filled" Color="Color.Primary" Link="/account/login/">Log in</MudButton>
 
                 </NotAuthorized>
@@ -135,9 +136,13 @@
         Highlight(typeId, HighlightType.Selected, true);
     }
 
-    void OnAppStateChanged()
+    public async Task OnAppStateChanged(bool loadTypes)
     {
         CacheSvc.CacheAppState(_appState);
+        if (loadTypes)
+        {
+            await LoadTypes(_appState.CurrentSpaceId);
+        }
         this.StateHasChanged();
     }
 
