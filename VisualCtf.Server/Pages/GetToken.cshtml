@@ -11,7 +11,7 @@
         window.onload = function () {
             const token = getHashValue('access_token');
             if (token) {
-                window.location.href = '/account/login/' + token;
+                window.location.href = '/signin/' + token;
             }
         }
 

@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
+using Blazored.LocalStorage;
 using Microsoft.AspNetCore.Components.Authorization;
 using MudBlazor.Services;
 using VisualCtf.Client.Services;
@@ -23,6 +24,7 @@ namespace VisualCtf.Client
             builder.Services.AddScoped(sp => new HttpClient { BaseAddress = new Uri(builder.HostEnvironment.BaseAddress) });
             builder.Services.AddAuthorizationCore();
             builder.Services.AddScoped<AuthenticationStateProvider, CtfAuthStateProvider>();
+           // builder.Services.AddBlazoredLocalStorage();
             builder.Services.AddMudServices();
 
             await builder.Build().RunAsync();

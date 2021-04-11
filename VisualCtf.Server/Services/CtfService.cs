@@ -6,12 +6,13 @@ using System.Threading.Tasks;
 using Contentful.Core;
 using Contentful.Core.Configuration;
 using Contentful.Core.Models;
-using Contentful.Core.Models.Management;
+using VisualCtf.Shared.Models;
+using VisualCtf.Shared.Services;
 using VisualCtf.ViewModels;
 
 namespace VisualCtf.Server.Services
 {
-    public class CtfService
+    public class CtfService : ICtfService
     {
         private readonly HttpClient _httpClient;
 
@@ -23,8 +24,12 @@ namespace VisualCtf.Server.Services
         public async Task<User> GetUser(string key)
         {
             var ctfClient = new ContentfulManagementClient(_httpClient, new ContentfulOptions { ManagementApiKey = key });
-            var user = await ctfClient.GetCurrentUser(); 
-            return user;
+            var ctfUser = await ctfClient.GetCurrentUser(); 
+            return new User
+            {
+                Name = ctfUser.FirstName, 
+                Token = key
+            };
         }
 
         private IEnumerable<VisualTypeGroup> GetTypeGroups(IEnumerable<VisualType> visualTypes, string groupNameSeparator)

@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using VisualCtf.Server.Services;
+using VisualCtf.Shared.Services;
 
 namespace VisualCtf.Server.Controllers
 {
@@ -12,11 +13,11 @@ namespace VisualCtf.Server.Controllers
     public class AccountController : Controller
     {
         public static string CtfKeyClaimType => "CtfToken";
-        private readonly CtfService _ctfService;
+        private readonly ICtfService _ctfService;
         private readonly IConfiguration _configuration;
         
 
-        public AccountController(CtfService ctfService, IConfiguration configuration)
+        public AccountController(ICtfService ctfService, IConfiguration configuration)
         {
             _ctfService = ctfService;
             _configuration = configuration;
@@ -39,7 +40,7 @@ namespace VisualCtf.Server.Controllers
             var user = await _ctfService.GetUser(token);
 
             var identity = new ClaimsIdentity(CookieAuthenticationDefaults.AuthenticationScheme);
-            identity.AddClaim(new Claim(ClaimTypes.Name, user.FirstName));
+            identity.AddClaim(new Claim(ClaimTypes.Name, user.Name));
             identity.AddClaim(new Claim(CtfKeyClaimType, token));
             var principal = new ClaimsPrincipal(identity);
             await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, principal);
