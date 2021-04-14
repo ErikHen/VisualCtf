@@ -1,42 +1,38 @@
-﻿using System;
+﻿using Microsoft.AspNetCore.Components.Authorization;
 using System.Collections.Generic;
-using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
-using Blazored.LocalStorage;
-using Microsoft.AspNetCore.Components.Authorization;
-using VisualCtf.Client.Models;
+using VisualCtf.Shared.Models;
+using VisualCtf.Shared.Services;
 
 namespace VisualCtf.Client.Services
 {
     public class CtfAuthStateProvider : AuthenticationStateProvider
     {
-      //  private readonly ILocalStorageService _localStorage;
+        private User _user;
+        private readonly IAuthService _authService;
 
-        //public CtfAuthStateProvider(ILocalStorageService localStorage)
-        //{
-        //    _localStorage = localStorage;
-        //}
+        public CtfAuthStateProvider(IAuthService authService)
+        {
+            _authService = authService;
+        }
 
         public override async Task<AuthenticationState> GetAuthenticationStateAsync()
         {
+            _user ??= await _authService.CurrentUser();
+
             var identity = new ClaimsIdentity();
+            if (_user?.Token != null)
+            {
+                var claims = new List<Claim>()
+                {
+                    new Claim(ClaimTypes.Name, _user.Name),
+                    new Claim("CtfToken", _user.Token)
+                };
+                identity = new ClaimsIdentity(claims, "CtfAuth");
+            }
 
-            //var appState = await _localStorage.GetItemAsync<AppState>("appstate");
-            //if (!string.IsNullOrEmpty(appState?.CtfToken))
-            //{
-            //    var claims = new List<Claim>()
-            //    {
-            //        new Claim(ClaimTypes.Name, "TODO"),
-            //        new Claim("CtfToken", appState.CtfToken)
-            //    };
-            //    identity = new ClaimsIdentity(claims);
-            //}
-
-            var result = new AuthenticationState(new ClaimsPrincipal(identity));
-            return result;
+            return await Task.FromResult(new AuthenticationState(new ClaimsPrincipal(identity)));
         }
-
-        
     }
 }

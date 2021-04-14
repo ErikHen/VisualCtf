@@ -1,0 +1,25 @@
+﻿@page "/about"
+@*@using VisualCtf.Services.CtfDelivery
+@using Page = VisualCtf.Services.CtfDelivery.Page
+@using Contentful.Core.Search
+@using Contentful.Core.Models*@
+
+@*@inject CtfDeliveryService CtfDelivery*@
+
+<MudPaper Elevation="0" Class="pa-5">
+    <MudPaper Elevation="0" Class="mainbody" Style="max-width: 800px">
+        @((MarkupString)_mainBodyHtml)
+    </MudPaper>
+</MudPaper>
+
+@code {
+    private string _mainBodyHtml;
+
+    protected override async Task OnInitializedAsync()
+    {
+        //    var page = await CtfDelivery.GetPage("/about");
+        //    var htmlRenderer = new HtmlRenderer();
+        //    htmlRenderer.AddRenderer(new LinkContentRenderer { Order = 10 });
+        //    _mainBodyHtml = await htmlRenderer.ToHtml(page.MainText);
+    }
+}

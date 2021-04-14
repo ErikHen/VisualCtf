@@ -1,3 +1,4 @@
+using System;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
@@ -6,8 +7,11 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using System.Linq;
+using System.Net.Http;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Components.Authorization;
+using MudBlazor.Services;
+using VisualCtf.Client.Services;
 using VisualCtf.Server.Services;
 using VisualCtf.Shared.Services;
 
@@ -29,10 +33,17 @@ namespace VisualCtf.Server
             services.AddControllersWithViews();
             services.AddRazorPages();
 
-            services.AddMemoryCache();
-            // services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme).AddCookie();
-           // services.AddScoped<AuthenticationStateProvider, CtfAuthStateProvider>();
-            services.AddSingleton<ICtfService, CtfService>();
+            services.AddMudServices();
+
+            // services.AddMemoryCache();
+
+            services.AddHttpContextAccessor();
+
+            services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme).AddCookie();
+
+            services.AddScoped<IAuthService, Services.AuthService>();
+            services.AddScoped<AuthenticationStateProvider, CtfAuthStateProvider>();
+            services.AddSingleton<ICtfService, Services.CtfService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -56,14 +67,14 @@ namespace VisualCtf.Server
 
             app.UseRouting();
 
-           // app.UseAuthentication();
+            app.UseAuthentication();
 
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapRazorPages();
                 endpoints.MapControllers();
-                endpoints.MapFallbackToFile("index.html");
-               // endpoints.MapFallbackToPage("/_Host");
+                //endpoints.MapFallbackToFile("index.html");
+                endpoints.MapFallbackToPage("/_Host");
             });
         }
     }

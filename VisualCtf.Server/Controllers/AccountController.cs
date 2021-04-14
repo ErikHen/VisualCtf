@@ -1,10 +1,12 @@
-﻿using System.Security.Claims;
+﻿using System.Linq;
+using System.Security.Claims;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using VisualCtf.Server.Services;
+using VisualCtf.Shared.Models;
 using VisualCtf.Shared.Services;
 
 namespace VisualCtf.Server.Controllers
@@ -14,38 +16,30 @@ namespace VisualCtf.Server.Controllers
     {
         public static string CtfKeyClaimType => "CtfToken";
         private readonly ICtfService _ctfService;
-        private readonly IConfiguration _configuration;
-        
+        private readonly IAuthService _authService;
 
-        public AccountController(ICtfService ctfService, IConfiguration configuration)
+
+        public AccountController(ICtfService ctfService, IAuthService authService)
         {
             _ctfService = ctfService;
-            _configuration = configuration;
-        }
-
-        [HttpGet]
-        public IActionResult Login()
-        {
-            var host = HttpContext.Request.Host.ToString();
-            var prefix = host.Contains("azurewebsite") ? "Azureweb" : "";
-            var clientId = _configuration["OAuthClientId" + prefix];
-            var authorizeUrl = $"https://be.contentful.com/oauth/authorize?response_type=token&client_id={clientId}&redirect_uri=https://{host}/signin/&scope=content_management_read";
-            return Redirect(authorizeUrl);
+            _authService = authService;
         }
 
         [HttpGet]
         [Route("{token}")]
         public async Task<IActionResult> Login(string token)
         {
+            
             var user = await _ctfService.GetUser(token);
 
             var identity = new ClaimsIdentity(CookieAuthenticationDefaults.AuthenticationScheme);
             identity.AddClaim(new Claim(ClaimTypes.Name, user.Name));
-            identity.AddClaim(new Claim(CtfKeyClaimType, token));
+            identity.AddClaim(new Claim(_authService.CtfKeyClaimType, token));
             var principal = new ClaimsPrincipal(identity);
             await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, principal);
 
             return Redirect("/");
+
         }
 
         public async Task<IActionResult> Logout()
@@ -54,6 +48,12 @@ namespace VisualCtf.Server.Controllers
             await HttpContext.SignOutAsync();
 
             return Redirect("/");
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> GetUser()
+        {
+            return Ok(await _authService.CurrentUser());
         }
     }
 }

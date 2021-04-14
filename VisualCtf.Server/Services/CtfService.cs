@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using Contentful.Core;
 using Contentful.Core.Configuration;
 using Contentful.Core.Models;
+using Microsoft.AspNetCore.Http;
 using VisualCtf.Shared.Models;
 using VisualCtf.Shared.Services;
 using VisualCtf.ViewModels;
@@ -23,6 +24,7 @@ namespace VisualCtf.Server.Services
 
         public async Task<User> GetUser(string key)
         {
+            
             var ctfClient = new ContentfulManagementClient(_httpClient, new ContentfulOptions { ManagementApiKey = key });
             var ctfUser = await ctfClient.GetCurrentUser(); 
             return new User
