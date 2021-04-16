@@ -20,7 +20,13 @@ namespace VisualCtf.Client.Services
 
         public async Task<User> GetUser(string key)
         {
-            return await _httpClient.GetFromJsonAsync<User>($"api/getuser/{key}");
+            throw new NotImplementedException();
         }
+
+        public async Task<IEnumerable<VisualSpace>> GetSpaces(string key)
+        {
+            return await _httpClient.GetFromJsonAsync<IEnumerable<VisualSpace>>($"api/ctf/spaces/{key}");
+        }
+
     }
 }

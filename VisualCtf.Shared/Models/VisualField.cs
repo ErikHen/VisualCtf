@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using VisualCtf.Shared.Models;
 
 namespace VisualCtf.ViewModels
 {

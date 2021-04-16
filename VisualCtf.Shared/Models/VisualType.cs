@@ -1,9 +1,7 @@
-﻿using System;
+﻿using System.Collections.Generic;
+using VisualCtf.ViewModels;
 
-using System.Collections.Generic;
-using System.Linq;
-
-namespace VisualCtf.ViewModels
+namespace VisualCtf.Shared.Models
 {
     public class VisualType : VisualBase
     {

@@ -2,6 +2,7 @@
 using Contentful.Core.Models.Management;
 using System.Collections.Generic;
 using System.Linq;
+using VisualCtf.Shared.Models;
 using VisualCtf.ViewModels;
 
 namespace VisualCtf.Server.Factories

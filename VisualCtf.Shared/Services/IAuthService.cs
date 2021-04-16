@@ -9,7 +9,7 @@ namespace VisualCtf.Shared.Services
 {
     public interface IAuthService
     {
-        string CtfKeyClaimType => "";
+       // string CtfKeyClaimType => "";
         Task<User> CurrentUser();
     }
 }

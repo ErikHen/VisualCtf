@@ -4,9 +4,6 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Configuration;
-using VisualCtf.Server.Services;
-using VisualCtf.Shared.Models;
 using VisualCtf.Shared.Services;
 
 namespace VisualCtf.Server.Controllers
@@ -34,7 +31,7 @@ namespace VisualCtf.Server.Controllers
 
             var identity = new ClaimsIdentity(CookieAuthenticationDefaults.AuthenticationScheme);
             identity.AddClaim(new Claim(ClaimTypes.Name, user.Name));
-            identity.AddClaim(new Claim(_authService.CtfKeyClaimType, token));
+            identity.AddClaim(new Claim(Shared.Models.User.CtfKeyClaimType, token));
             var principal = new ClaimsPrincipal(identity);
             await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, principal);
 

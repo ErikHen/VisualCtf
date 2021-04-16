@@ -1,11 +1,9 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 using VisualCtf.Shared.Models;
 using VisualCtf.Shared.Services;
 
-namespace VisualCtf.Client.Services
+namespace VisualCtf.Server.Services
 {
     public class AppStateService : IAppStateService
     {
@@ -13,7 +11,7 @@ namespace VisualCtf.Client.Services
 
         public async Task Set(AppState state)
         {
-            AppState = state;
+            throw new NotImplementedException();
         }
     }
 }

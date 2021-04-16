@@ -1,8 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using VisualCtf.ViewModels;
 
-namespace VisualCtf.Client.Models
+namespace VisualCtf.Shared.Models
 {
     public class AppState
     {
@@ -15,6 +14,7 @@ namespace VisualCtf.Client.Models
         /// Mapping type id to type name
         /// </summary>
         public Dictionary<string, string> TypeNameMapping { get; set; }
+        public IEnumerable<VisualSpace> Spaces { get; set; }
         public string CurrentSpaceId { get; set; }
         public bool DoGrouping { get; set; }
         public string SortGroupBy { get; set; }

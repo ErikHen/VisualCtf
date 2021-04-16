@@ -11,8 +11,6 @@ namespace VisualCtf.Server.Services
 {
     public class AuthService : IAuthService
     {
-        public string CtfKeyClaimType => "CtfToken";
-
         private readonly IHttpContextAccessor _httpContextAccessor;
         public AuthService(IHttpContextAccessor httpContextAccessor)
         {
@@ -27,7 +25,7 @@ namespace VisualCtf.Server.Services
                 return new User
                 {
                     Name = _httpContextAccessor.HttpContext.User.Identity.Name,
-                    Token = _httpContextAccessor.HttpContext.User.Claims.FirstOrDefault(c => c.Type == CtfKeyClaimType)?.Value
+                    Token = _httpContextAccessor.HttpContext.User.Claims.FirstOrDefault(c => c.Type == User.CtfKeyClaimType)?.Value
                 };
             }
 

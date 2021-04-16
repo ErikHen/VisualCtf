@@ -44,6 +44,7 @@ namespace VisualCtf.Server
             services.AddScoped<IAuthService, Services.AuthService>();
             services.AddScoped<AuthenticationStateProvider, CtfAuthStateProvider>();
             services.AddSingleton<ICtfService, Services.CtfService>();
+            services.AddSingleton<IAppStateService, Services.AppStateService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

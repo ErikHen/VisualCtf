@@ -7,6 +7,7 @@ using Contentful.Core;
 using Contentful.Core.Configuration;
 using Contentful.Core.Models;
 using Microsoft.AspNetCore.Http;
+using VisualCtf.Server.Factories;
 using VisualCtf.Shared.Models;
 using VisualCtf.Shared.Services;
 using VisualCtf.ViewModels;
@@ -65,11 +66,11 @@ namespace VisualCtf.Server.Services
             
         //}
 
-        public async Task<IEnumerable<Space>> GetSpaces(string key)
+        public async Task<IEnumerable<VisualSpace>> GetSpaces(string key)
         {
             var ctfClient = new ContentfulManagementClient(_httpClient, new ContentfulOptions { ManagementApiKey = key });
             var ctfSpaces = await ctfClient.GetSpaces();
-            return ctfSpaces;
+            return ctfSpaces.Select(VisualSpaceFactory.CreateSpace);
         }
 
         //public async Task RevokeToken(string key)
