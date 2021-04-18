@@ -1,0 +1,85 @@
+﻿@using VisualCtf.Shared.Services
+@inject IAppStateService StateService
+@inject ICtfService Ctf
+
+<MudExpansionPanel Text="SETTINGS" HideIcon="true" Class=" mud-typography-body1">
+    <TitleContent>
+        @*<MudTooltip Text="Show/hide settings" Placement="Placement.Top">*@
+            <div class="d-flex">
+                <MudIcon Icon="@Icons.Material.Filled.Settings" class="mr-2"></MudIcon>
+                <MudText><strong>SETTINGS</strong></MudText>
+            </div>
+        @*</MudTooltip>*@
+    </TitleContent>
+    <ChildContent>
+        <MudSwitch Color="Color.Primary" @bind-Checked=@(_doGrouping) Label="Group types" /><br />
+        
+        <MudPaper Elevation="0">
+            <b>Group name separator</b> "@GroupNameSeparator" 
+            <MudTooltip Text="Edit separator " Placement="Placement.Top"><MudIconButton Icon="@(Icons.Filled.Edit)" Size="Size.Small" Disabled="@(!_doGrouping)" OnClick="@(() => _editSeparator = true)" /></MudTooltip>
+        
+            <MudPopover Open="@_editSeparator" Class="px-4 pt-4" Style="width:400px;">
+                    <MudText Class="mb-4">
+                        Set the characters that are used as separator when grouping the content types.
+
+                    </MudText>
+                    <MudTextField @bind-Value="@GroupNameSeparator" Label="Group name separator" Variant="Variant.Outlined" Margin="@Margin.Dense" FullWidth="false" ></MudTextField>
+
+                    <MudButton OnClick="@(() => {GroupNameSeparator = " > "; _editSeparator = false;  })" Class="">Reset</MudButton>
+                    <MudButton OnClick="@(() => { _editSeparator = false;  })" Class="">OK</MudButton>
+            </MudPopover>
+        </MudPaper>
+        
+        @*<div class="d-flex">
+            <div>*@
+                <b class="mr-5">Order by</b>
+            @*</div>
+            <div>*@
+                <MudRadioGroup @bind-SelectedOption="@SortGroupBy">
+                    <MudRadio Option="@("name")" Color="Color.Primary" Disabled="@(!_doGrouping)">Group name</MudRadio>
+                    <MudRadio Option="@("size")" Color="Color.Primary" Disabled="@(!_doGrouping)">Group size</MudRadio>
+                </MudRadioGroup>
+            @*</div>
+        </div>*@
+
+    </ChildContent>
+    
+</MudExpansionPanel>
+
+@code {
+
+
+    private bool _doGrouping
+    {
+        get => StateService.AppState.DoGrouping;
+        set
+        {
+            StateService.AppState.DoGrouping = value;
+            StateService.Set(StateService.AppState);
+        }
+    }
+
+    private string SortGroupBy
+    {
+        get => StateService.AppState.SortGroupBy;
+        set
+        {
+            StateService.AppState.SortGroupBy = value;
+            StateService.Set(StateService.AppState);
+        }
+    }
+
+
+    private string GroupNameSeparator
+    {
+        get => StateService.AppState.GroupNameSeparator;
+        set
+        {
+            StateService.AppState.GroupNameSeparator = value;
+            StateService.AppState.TypeGroups = Ctf.GroupTypes(StateService.AppState.Types, StateService.AppState.GroupNameSeparator);
+            StateService.Set(StateService.AppState);
+        }
+    }
+
+    private bool _editSeparator;
+}

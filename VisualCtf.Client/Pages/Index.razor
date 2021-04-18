@@ -9,6 +9,8 @@
 @inject IAppStateService StateService
 @inject AuthenticationStateProvider AuthenticationStateProvider
 
+@implements IDisposable
+
 <MudPaper Elevation="0" Class="pa-5 mb-3">
     <MudGrid Spacing="2" Justify="Justify.FlexStart">
         <MudItem xs="12" md="4" xl="3">
@@ -25,15 +27,15 @@
                             <MudSelectItem Value="@space.Id">@space.Name</MudSelectItem>
                         }
                     </MudSelect>
-                            @*
+                    @*
 
-                            Class="d-flex justify-space-between"
-                            *@
+                        Class="d-flex justify-space-between"
+                    *@
                 }
                 @if (_appState?.TypeGroups != null)
                 {
                     <MudTooltip Text="Refresh" Placement="Placement.Top">
-                        @* <MudIconButton Icon="@Icons.Material.Filled.Refresh" OnClick="() => LoadTypes(_appState.CurrentSpaceId)" Class="mt-2" />*@
+                        <MudIconButton Icon="@Icons.Material.Filled.Refresh" OnClick="() => LoadTypes(_appState.CurrentSpaceId)" Class="mt-2" />
                     </MudTooltip>
 
                 }
@@ -49,32 +51,83 @@
             <AuthorizeView>
                 <NotAuthorized>
                     <p>
-                        Login with your regular Contentful username and password. <br/>
+                        Login with your regular Contentful username and password. <br />
                         Please read the <a href="/about">about section</a> before logging in for the first time.
-                    </p><br/>
-                    <MudButton Variant="Variant.Filled" Color="Color.Primary" Link="/account/login/">Log in</MudButton>
+                    </p><br />
+                    <LoginButton />
 
                 </NotAuthorized>
             </AuthorizeView>
         </MudItem>
 
-        <!--<AuthorizeView>
-            <Authorized>
-                <MudItem xs="12" sm="6" md="4">
-                    test-->
-        @* <VisualizerSettings AppState="_appState" OnAppStateChanged="OnAppStateChanged"></VisualizerSettings>*@
-        <!--</MudItem>
-            </Authorized>
-
-        </AuthorizeView>-->
-
+        @if (_appState?.TypeGroups != null)
+        {
+            <MudItem xs="12" sm="6" md="4">
+                <VisualizerSettings />
+            </MudItem>
+        }
     </MudGrid>
-
 </MudPaper>
+
+
+@if (_appState?.TypeGroups != null)
+{
+    <MudGrid>
+        <MudItem xs="12">
+            <MudGrid Spacing="2" Justify="Justify.FlexStart">
+                @if (_appState.DoGrouping)
+                {
+                    var sortedGroups = _appState.SortGroupBy == "size" ? _appState.TypeGroups.OrderByDescending(g => g.Types.Count) : _appState.TypeGroups;
+                    @foreach (var typeGroup in sortedGroups)
+                    {
+                        <MudItem xs="12" sm="6" md="3" xl="2">
+                            <h3 style="text-align: center" class="mb-3 mt-3">@typeGroup.Name</h3>
+                            <MudExpansionPanels MultiExpansion="true">
+                                @foreach (var visualType in typeGroup.Types)
+                                {
+                                    <VisualCtf.Client.Shared.Type VisualType="visualType" OnClick="OnTypeClicked"></VisualCtf.Client.Shared.Type>
+                                }
+                            </MudExpansionPanels>
+                        </MudItem>
+                    }
+                }
+                else
+                {
+                    @foreach (var visualType in _appState.Types)
+                    {
+                        <MudItem xs="12" sm="6" md="3" xl="2">
+                            <VisualCtf.Client.Shared.Type VisualType="visualType" OnClick="OnTypeClicked"></VisualCtf.Client.Shared.Type>
+                        </MudItem>
+                    }
+                }
+
+            </MudGrid>
+        </MudItem>
+    </MudGrid>
+}
+
+@if (showLoader)
+{
+    <div class="loading">
+        <MudProgressCircular Indeterminate="true" />
+    </div>
+}
+
+
 
 @code {
     private AppState _appState;
     private bool showLoader;
+
+    protected override void OnInitialized()
+    {
+        StateService.OnChange += StateHasChanged;
+    }
+
+    public void Dispose()
+    {
+        StateService.OnChange -= StateHasChanged;
+    }
 
     protected override async Task OnAfterRenderAsync(bool firstTime)
     {
@@ -96,15 +149,68 @@
                 this.StateHasChanged();
             }
         }
+    }
 
+    void OnTypeClicked(string typeId)
+    {
+        Highlight(typeId, HighlightType.Selected, true);
+    }
+
+    //public async Task OnAppStateChanged(bool loadTypes)
+    //{
+    //    CacheSvc.CacheAppState(_appState);
+    //    if (loadTypes)
+    //    {
+    //        await LoadTypes(_appState.CurrentSpaceId);
+    //    }
+    //    this.StateHasChanged();
+    //}
+
+    public void Highlight(string typeId, HighlightType highlightType, bool highLightReferences = false)
+    {
+        if (highLightReferences)
+        {
+            //clear all
+            foreach (var type in _appState.TypeGroups.SelectMany(g => g.Types))
+            {
+                type.Highlighted = HighlightType.None;
+            }
+        }
+
+        var visualType = _appState.TypeGroups.SelectMany(g => g.Types.Where(t => t.Id == typeId)).FirstOrDefault();
+        if (visualType != null)
+        {
+            visualType.Highlighted = highlightType;
+            if (highLightReferences)
+            {
+                //highlight child references
+                foreach (var reference in visualType.FieldReferences.SelectMany(r => r.referenceTypes))
+                {
+                    Highlight(reference, HighlightType.SelectedChild);
+                }
+                //highlight parent references
+                foreach (var type in _appState.TypeGroups.SelectMany(g => g.Types))
+                {
+                    if (type.FieldReferences.Any(tr => tr.referenceTypes.Any(refId => refId == visualType.Id)))
+                    {
+                        Highlight(type.Id, HighlightType.SelectedParent);
+                    }
+                }
+            }
+        }
     }
 
     private async Task LoadTypes(string spaceId)
     {
         showLoader = true;
         _appState.CurrentSpaceId = spaceId;
+        _appState.TypeGroups = await Ctf.GetTypes(_appState.CtfToken, _appState.CurrentSpaceId, _appState.GroupNameSeparator);
+        _appState.TypeNameMapping = new Dictionary<string, string>();
+        foreach (var type in _appState.Types)
+        {
+            _appState.TypeNameMapping.Add(type.Id, type.Name);
+        }
         await StateService.Set(_appState);
-        //await Ctf.GetTypes(_appState);
         showLoader = false;
     }
 

@@ -28,5 +28,34 @@ namespace VisualCtf.Client.Services
             return await _httpClient.GetFromJsonAsync<IEnumerable<VisualSpace>>($"api/ctf/spaces/{key}");
         }
 
+        //todo: this should be in base class
+        public IEnumerable<VisualTypeGroup> GroupTypes(IEnumerable<VisualType> visualTypes, string groupNameSeparator)
+        {
+            var typeGroups = new List<VisualTypeGroup>();
+            foreach (var type in visualTypes)
+            {
+                var groupName = GetGroupName(type.Name, groupNameSeparator);
+                var typeGroup = typeGroups.FirstOrDefault(t => t.Name == groupName);
+                if (typeGroup == null)
+                {
+                    typeGroup = new VisualTypeGroup(groupName);
+                    typeGroups.Add(typeGroup);
+                }
+                typeGroup.Types.Add(type);
+            }
+
+            return typeGroups.OrderBy(t => t.Name);
+        }
+        private static string GetGroupName(string ctfTypeName, string groupNameSeparator)
+        {
+            var position = ctfTypeName.LastIndexOf(groupNameSeparator, StringComparison.InvariantCulture);
+            return position == -1 ? "Other" : ctfTypeName.Substring(0, position);
+        }
+
+        public async Task<IEnumerable<VisualTypeGroup>> GetTypes(string key, string spaceId, string separator)
+        {
+            return await _httpClient.GetFromJsonAsync<IEnumerable<VisualTypeGroup>>($"api/ctf/types/{key}/{spaceId}/{separator}");
+        }
+
     }
 }

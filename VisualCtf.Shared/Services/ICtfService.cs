@@ -12,5 +12,7 @@ namespace VisualCtf.Shared.Services
     {
         Task<User> GetUser(string key);
         Task<IEnumerable<VisualSpace>> GetSpaces(string key);
+        IEnumerable<VisualTypeGroup> GroupTypes(IEnumerable<VisualType> visualTypes, string groupNameSeparator);
+        Task<IEnumerable<VisualTypeGroup>> GetTypes(string key, string spaceId, string groupNameSeparator);
     }
 }

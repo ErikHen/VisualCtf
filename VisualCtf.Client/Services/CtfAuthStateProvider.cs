@@ -9,7 +9,6 @@ namespace VisualCtf.Client.Services
 {
     public class CtfAuthStateProvider : AuthenticationStateProvider
     {
-        private User _user;
         private readonly IAuthService _authService;
 
         public CtfAuthStateProvider(IAuthService authService)
@@ -19,15 +18,15 @@ namespace VisualCtf.Client.Services
 
         public override async Task<AuthenticationState> GetAuthenticationStateAsync()
         {
-            _user ??= await _authService.CurrentUser();
+            var user = await _authService.CurrentUser();
 
             var identity = new ClaimsIdentity();
-            if (_user?.Token != null)
+            if (user?.Token != null)
             {
                 var claims = new List<Claim>()
                 {
-                    new Claim(ClaimTypes.Name, _user.Name),
-                    new Claim("CtfToken", _user.Token)
+                    new Claim(ClaimTypes.Name, user.Name),
+                    new Claim("CtfToken", user.Token)
                 };
                 identity = new ClaimsIdentity(claims, "CtfAuth");
             }

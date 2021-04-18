@@ -35,7 +35,7 @@ namespace VisualCtf.Server.Services
             };
         }
 
-        private IEnumerable<VisualTypeGroup> GetTypeGroups(IEnumerable<VisualType> visualTypes, string groupNameSeparator)
+        public IEnumerable<VisualTypeGroup> GroupTypes(IEnumerable<VisualType> visualTypes, string groupNameSeparator)
         {
             var typeGroups = new List<VisualTypeGroup>();
             foreach (var type in visualTypes)
@@ -53,18 +53,12 @@ namespace VisualCtf.Server.Services
             return typeGroups.OrderBy(t => t.Name);
         }
 
-        //public async Task GetTypes(AppState appState)
-        //{
-        //    var ctfClient = new ContentfulManagementClient(_httpClient, new ContentfulOptions { ManagementApiKey = appState.ApiKey, SpaceId = appState.CurrentSpaceId });
-        //    var ctfTypes = (await ctfClient.GetContentTypes()).OrderBy(c => c.Name).ToList();
-        //    appState.TypeGroups = GetTypeGroups(ctfTypes.Select(c => new VisualType(c)), appState.GroupNameSeparator);
-        //    appState.TypeNameMapping = new Dictionary<string, string>();
-        //    foreach (var type in ctfTypes)
-        //    {
-        //        appState.TypeNameMapping.Add(type.SystemProperties.Id, type.Name);
-        //    }
-            
-        //}
+        public async Task<IEnumerable<VisualTypeGroup>> GetTypes(string key, string spaceId, string groupNameSeparator )
+        {
+            var ctfClient = new ContentfulManagementClient(_httpClient, new ContentfulOptions { ManagementApiKey = key, SpaceId = spaceId });
+            var ctfTypes = (await ctfClient.GetContentTypes()).OrderBy(c => c.Name).ToList();
+            return GroupTypes(ctfTypes.Select(VisualTypeFactory.CreateType), groupNameSeparator);
+        }
 
         public async Task<IEnumerable<VisualSpace>> GetSpaces(string key)
         {

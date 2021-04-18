@@ -9,11 +9,13 @@ namespace VisualCtf.Client.Services
 {
     public class AppStateService : IAppStateService
     {
+        public event Action OnChange;
         public AppState AppState { get; private set; }
 
         public async Task Set(AppState state)
         {
             AppState = state;
+            OnChange?.Invoke();
         }
     }
 }

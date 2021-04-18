@@ -9,6 +9,7 @@ namespace VisualCtf.Shared.Services
 {
     public interface IAppStateService
     {
+        event Action OnChange;
         AppState AppState { get; }
         Task Set(AppState state);
     }

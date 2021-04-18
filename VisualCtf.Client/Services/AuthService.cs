@@ -8,6 +8,7 @@ namespace VisualCtf.Client.Services
 {
     public class AuthService : IAuthService
     {
+        private User _user;
         private readonly HttpClient _httpClient;
         public AuthService(HttpClient httpClient)
         {
@@ -15,8 +16,8 @@ namespace VisualCtf.Client.Services
         }
         public async Task<User> CurrentUser()
         {
-            var result = await _httpClient.GetFromJsonAsync<User>("account/getuser");
-            return result;
+            _user ??= await _httpClient.GetFromJsonAsync<User>("account/getuser");
+            return _user;
         }
     }
 }

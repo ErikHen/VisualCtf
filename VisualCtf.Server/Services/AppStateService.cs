@@ -13,5 +13,7 @@ namespace VisualCtf.Server.Services
         {
             throw new NotImplementedException();
         }
+
+        public event Action OnChange;
     }
 }

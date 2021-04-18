@@ -25,5 +25,12 @@ namespace VisualCtf.Server.Controllers
         {
             return Ok(await _ctfService.GetSpaces(token));
         }
+
+        [HttpGet]
+        [Route("{token}/{spaceId}/{separator}")]
+        public async Task<IActionResult> Types(string token, string spaceId, string separator)
+        {
+            return Ok(await _ctfService.GetTypes(token, spaceId, separator));
+        }
     }
 }
