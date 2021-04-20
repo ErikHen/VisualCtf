@@ -13,6 +13,7 @@ using Microsoft.AspNetCore.Components.Authorization;
 using MudBlazor.Services;
 using VisualCtf.Client.Services;
 using VisualCtf.Server.Services;
+using VisualCtf.Server.Services.CtfDelivery;
 using VisualCtf.Shared.Services;
 
 namespace VisualCtf.Server
@@ -35,7 +36,9 @@ namespace VisualCtf.Server
 
             services.AddMudServices();
 
-            // services.AddMemoryCache();
+            services.AddMemoryCache();
+            services.AddSingleton<CacheService>();
+            services.AddSingleton<ICtfDeliveryService, Services.CtfDelivery.CtfDeliveryService>();
 
             services.AddHttpContextAccessor();
 

@@ -1,15 +1,10 @@
 ﻿@page "/"
-
-
 @using VisualCtf.Shared.Services
-@using VisualCtf.Client.Services
 @using VisualCtf.Shared.Models
 
 @inject ICtfService Ctf
 @inject IAppStateService StateService
 @inject AuthenticationStateProvider AuthenticationStateProvider
-
-
 
 <MudPaper Elevation="0" Class="pa-5 mb-3">
     <MudGrid Spacing="2" Justify="Justify.FlexStart">
@@ -27,10 +22,6 @@
                             <MudSelectItem Value="@space.Id">@space.Name</MudSelectItem>
                         }
                     </MudSelect>
-                    @*
-
-                        Class="d-flex justify-space-between"
-                    *@
                 }
                 @if (_appState?.TypeGroups != null)
                 {
@@ -73,38 +64,6 @@
 @if (_appState?.TypeGroups != null)
 {
     <Types/>
-    @*<MudGrid>
-        <MudItem xs="12">
-            <MudGrid Spacing="2" Justify="Justify.FlexStart">
-                @if (_appState.DoGrouping)
-                {
-                    var sortedGroups = _appState.SortGroupBy == "size" ? _appState.TypeGroups.OrderByDescending(g => g.Types.Count) : _appState.TypeGroups;
-                    @foreach (var typeGroup in sortedGroups)
-                    {
-                        <MudItem xs="12" sm="6" md="3" xl="2">
-                            <h3 style="text-align: center" class="mb-3 mt-3">@typeGroup.Name</h3>
-                            <MudExpansionPanels MultiExpansion="true">
-                                @foreach (var visualType in typeGroup.Types)
-                                {
-                                    <VisualCtf.Client.Shared.Type VisualType="visualType" OnClick="OnTypeClicked"></VisualCtf.Client.Shared.Type>
-                                }
-                            </MudExpansionPanels>
-                        </MudItem>
-                    }
-                }
-                else
-                {
-                    @foreach (var visualType in _appState.Types)
-                    {
-                        <MudItem xs="12" sm="6" md="3" xl="2">
-                            <VisualCtf.Client.Shared.Type VisualType="visualType" OnClick="OnTypeClicked"></VisualCtf.Client.Shared.Type>
-                        </MudItem>
-                    }
-                }
-
-            </MudGrid>
-        </MudItem>
-    </MudGrid>*@
 }
 
 @if (showLoader)
@@ -119,8 +78,6 @@
 @code {
     private AppState _appState;
     private bool showLoader;
-
-    
 
     protected override async Task OnAfterRenderAsync(bool firstTime)
     {
@@ -143,7 +100,6 @@
         }
     }
 
-    
 
     private async Task LoadTypes(string spaceId)
     {

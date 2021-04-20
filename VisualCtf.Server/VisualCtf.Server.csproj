@@ -5,6 +5,10 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Services\CtfDelivery\SeoInfo.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="contentful.csharp" Version="6.0.6" />
     <PackageReference Include="Microsoft.AspNetCore.Components.Authorization" Version="5.0.5" />
     <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.Server" Version="5.0.5" />
