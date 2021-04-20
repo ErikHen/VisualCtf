@@ -9,7 +9,7 @@
 @inject IAppStateService StateService
 @inject AuthenticationStateProvider AuthenticationStateProvider
 
-@implements IDisposable
+
 
 <MudPaper Elevation="0" Class="pa-5 mb-3">
     <MudGrid Spacing="2" Justify="Justify.FlexStart">
@@ -72,7 +72,8 @@
 
 @if (_appState?.TypeGroups != null)
 {
-    <MudGrid>
+    <Types/>
+    @*<MudGrid>
         <MudItem xs="12">
             <MudGrid Spacing="2" Justify="Justify.FlexStart">
                 @if (_appState.DoGrouping)
@@ -103,7 +104,7 @@
 
             </MudGrid>
         </MudItem>
-    </MudGrid>
+    </MudGrid>*@
 }
 
 @if (showLoader)
@@ -119,15 +120,7 @@
     private AppState _appState;
     private bool showLoader;
 
-    protected override void OnInitialized()
-    {
-        StateService.OnChange += StateHasChanged;
-    }
-
-    public void Dispose()
-    {
-        StateService.OnChange -= StateHasChanged;
-    }
+    
 
     protected override async Task OnAfterRenderAsync(bool firstTime)
     {
@@ -143,7 +136,6 @@
                 {
                     _appState = new(apiKey);
                     _appState.Spaces = await Ctf.GetSpaces(apiKey);
-                    // CacheSvc.CacheAppState(_appState);
                     await StateService.Set(_appState);
                 }
                 this.StateHasChanged();
@@ -151,54 +143,7 @@
         }
     }
 
-    void OnTypeClicked(string typeId)
-    {
-        Highlight(typeId, HighlightType.Selected, true);
-    }
-
-    //public async Task OnAppStateChanged(bool loadTypes)
-    //{
-    //    CacheSvc.CacheAppState(_appState);
-    //    if (loadTypes)
-    //    {
-    //        await LoadTypes(_appState.CurrentSpaceId);
-    //    }
-    //    this.StateHasChanged();
-    //}
-
-    public void Highlight(string typeId, HighlightType highlightType, bool highLightReferences = false)
-    {
-        if (highLightReferences)
-        {
-            //clear all
-            foreach (var type in _appState.TypeGroups.SelectMany(g => g.Types))
-            {
-                type.Highlighted = HighlightType.None;
-            }
-        }
-
-        var visualType = _appState.TypeGroups.SelectMany(g => g.Types.Where(t => t.Id == typeId)).FirstOrDefault();
-        if (visualType != null)
-        {
-            visualType.Highlighted = highlightType;
-            if (highLightReferences)
-            {
-                //highlight child references
-                foreach (var reference in visualType.FieldReferences.SelectMany(r => r.referenceTypes))
-                {
-                    Highlight(reference, HighlightType.SelectedChild);
-                }
-                //highlight parent references
-                foreach (var type in _appState.TypeGroups.SelectMany(g => g.Types))
-                {
-                    if (type.FieldReferences.Any(tr => tr.referenceTypes.Any(refId => refId == visualType.Id)))
-                    {
-                        Highlight(type.Id, HighlightType.SelectedParent);
-                    }
-                }
-            }
-        }
-    }
+    
 
     private async Task LoadTypes(string spaceId)
     {
