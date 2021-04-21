@@ -19,5 +19,6 @@ namespace VisualCtf.Client.Services
             _user ??= await _httpClient.GetFromJsonAsync<User>("account/getuser");
             return _user;
         }
+
     }
 }

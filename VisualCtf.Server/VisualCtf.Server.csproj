@@ -19,5 +19,4 @@
     <ProjectReference Include="..\VisualCtf.Shared\VisualCtf.Shared.csproj" />
   </ItemGroup>
 
-
 </Project>

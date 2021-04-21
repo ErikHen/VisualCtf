@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 using VisualCtf.Shared.Models;
 using VisualCtf.Shared.Services;
@@ -17,5 +15,7 @@ namespace VisualCtf.Client.Services
             AppState = state;
             OnChange?.Invoke();
         }
+
+        public bool IsServer => false;
     }
 }

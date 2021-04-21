@@ -15,5 +15,7 @@ namespace VisualCtf.Server.Services
         }
 
         public event Action OnChange;
+
+        public bool IsServer => true;
     }
 }
