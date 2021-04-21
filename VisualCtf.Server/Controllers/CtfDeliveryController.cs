@@ -1,4 +1,6 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using System.Net;
+using System.Text.Encodings.Web;
+using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
 using VisualCtf.Shared.Services;
 
@@ -19,7 +21,7 @@ namespace VisualCtf.Server.Controllers
         [Route("{slug}")]
         public async Task<IActionResult> Page(string slug)
         {
-            return Ok(await _ctfService.GetPage(slug));
+            return Ok(await _ctfService.GetPage(WebUtility.UrlDecode(slug)));
         }
     }
 }

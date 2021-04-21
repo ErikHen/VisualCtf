@@ -2,17 +2,16 @@
 @using VisualCtf.Shared.Services
 @using VisualCtf.Shared.Models.CtfDelivery
 
-
 @inject ICtfDeliveryService CtfDelivery
 
 <MudPaper Elevation="0" Class="pa-5">
-    <MudPaper Elevation="0" Class="mainbody" Style="max-width: 800px">
-        @((MarkupString)_page.MainTextHtml) ERIK
+    <MudPaper Elevation="0" Class="mainbody" Style="max-width: 800px" >
+        @((MarkupString)_page.MainTextHtml)
     </MudPaper>
 </MudPaper>
 
 @code {
-    private PageContent _page;
+    private PageContent _page = new();
 
     protected override async Task OnInitializedAsync()
     {

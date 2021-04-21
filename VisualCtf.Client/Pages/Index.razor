@@ -3,6 +3,8 @@
 @using VisualCtf.Shared.Models
 
 @inject ICtfService Ctf
+
+@inject ICtfDeliveryService CtfDelivery
 @inject IAppStateService StateService
 @inject AuthenticationStateProvider AuthenticationStateProvider
 
@@ -63,7 +65,7 @@
 
 @if (_appState?.TypeGroups != null)
 {
-    <Types/>
+    <Types />
 }
 
 @if (showLoader)

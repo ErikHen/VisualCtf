@@ -28,7 +28,7 @@ namespace VisualCtf.Client
             builder.Services.AddAuthorizationCore();
             builder.Services.AddScoped<AuthenticationStateProvider, CtfAuthStateProvider>();
             builder.Services.AddSingleton<IAppStateService, AppStateService>();
-            builder.Services.AddSingleton<ICtfDeliveryService, CtfDeliveryService>();
+            builder.Services.AddScoped<ICtfDeliveryService, CtfDeliveryService>();
             // builder.Services.AddBlazoredLocalStorage();
             builder.Services.AddMudServices();
 
