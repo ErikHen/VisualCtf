@@ -35,8 +35,7 @@ namespace VisualCtf.Server.Services.CtfDelivery
 
         public async Task<PageContent> GetPage(string slug)
         {
-            var asdf = (await GetPages()).FirstOrDefault(p => p.Slug == slug);
-            return asdf;
+            return (await GetPages()).FirstOrDefault(p => p.Slug == slug);
         }
 
         private async Task<IEnumerable<PageContent>> GetPages()
@@ -56,8 +55,5 @@ namespace VisualCtf.Server.Services.CtfDelivery
 
             return pages;
         }
-
-
-
     }
 }

@@ -20,7 +20,8 @@ namespace VisualCtf.Client
         public static async Task Main(string[] args)
         {
             var builder = WebAssemblyHostBuilder.CreateDefault(args);
-          //  builder.RootComponents.Add<App>("#app");
+
+            //builder.RootComponents.Add<App>("#app");
 
             builder.Services.AddScoped(sp => new HttpClient { BaseAddress = new Uri(builder.HostEnvironment.BaseAddress) });
             builder.Services.AddScoped<IAuthService, AuthService>();
@@ -31,8 +32,6 @@ namespace VisualCtf.Client
             builder.Services.AddScoped<ICtfDeliveryService, CtfDeliveryService>();
             // builder.Services.AddBlazoredLocalStorage();
             builder.Services.AddMudServices();
-
-
 
             await builder.Build().RunAsync();
         }

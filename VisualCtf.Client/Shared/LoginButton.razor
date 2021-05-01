@@ -10,8 +10,7 @@
     private string GetAuthorizeUrl()
     {
         var host = NavigationManager.BaseUri;
-        var prefix = host.Contains("azurewebsite") ? "Azureweb" : "";
-        var clientId = Configuration["OAuthClientId" + prefix];
+        var clientId = Configuration["OAuthClientId"];
         return $"https://be.contentful.com/oauth/authorize?response_type=token&client_id={clientId}&redirect_uri={host}gettoken/&scope=content_management_read";
     }
 }
