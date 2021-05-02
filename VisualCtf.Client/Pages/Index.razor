@@ -105,6 +105,7 @@
     private async Task LoadTypes(string spaceId)
     {
         showLoader = true;
+        _appState.SearchTerm = string.Empty;
         _appState.CurrentSpaceId = spaceId;
         _appState.TypeGroups = await Ctf.GetTypes(_appState.CtfToken, _appState.CurrentSpaceId, _appState.GroupNameSeparator);
         _appState.TypeNameMapping = new Dictionary<string, string>();

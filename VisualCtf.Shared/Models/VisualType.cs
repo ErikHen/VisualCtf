@@ -12,12 +12,7 @@ namespace VisualCtf.Shared.Models
         public HighlightType Highlighted { get; set; }
         public bool IsExpanded { get; set; }
         public bool ShowDetails { get; set; }
-
-        //public VisualType(ContentType ctfType)
-        //{
-            
-        //}
-
+        public bool IsHidden { get; set; }
         
     }
 

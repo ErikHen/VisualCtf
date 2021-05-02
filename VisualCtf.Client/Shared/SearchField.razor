@@ -1,0 +1,39 @@
+﻿@using VisualCtf.Shared.Services
+@inject IAppStateService StateService
+@inject ICtfService CtfService
+@implements IDisposable
+
+@if (!string.IsNullOrWhiteSpace(StateService.AppState?.CurrentSpaceId))
+{
+    <div class="searchfield">
+        <MudTextField @bind-Value="@SearchTerm" Label="Search for type" Variant="Variant.Filled" DebounceInterval="150" Margin="Margin.Dense"></MudTextField>
+    </div>
+    @*<MudPaper Elevation="0" Square="true" MinWidth="250px"  >
+        
+    </MudPaper>*@
+}
+
+
+@code {
+
+    private string SearchTerm
+    {
+        get => StateService.AppState.SearchTerm;
+        set
+        {
+            StateService.AppState.SearchTerm = value;
+            CtfService.FilterTypes(StateService.AppState.Types, value);
+            StateService.Set(StateService.AppState);
+        }
+    }
+
+    protected override void OnInitialized()
+    {
+        StateService.OnChange += StateHasChanged;
+    }
+
+    public void Dispose()
+    {
+        StateService.OnChange -= StateHasChanged;
+    }
+}

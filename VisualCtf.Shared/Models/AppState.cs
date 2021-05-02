@@ -19,6 +19,7 @@ namespace VisualCtf.Shared.Models
         public bool DoGrouping { get; set; }
         public string SortGroupBy { get; set; }
         public string GroupNameSeparator { get; set; }
+        public string SearchTerm { get; set; }
 
         public AppState(string ctfToken)
         {

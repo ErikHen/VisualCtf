@@ -18,6 +18,15 @@ p a {
     text-decoration: underline;
 }
 
+.searchfield {
+    background-color: white;
+    min-width: 250px;
+}
+    .searchfield .mud-input-control-margin-dense {
+        margin: 0;
+    }
+
+
 .loading {
     position: fixed;
     background-image: radial-gradient( circle closest-side, white, transparent );

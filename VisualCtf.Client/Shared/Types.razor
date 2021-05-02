@@ -12,20 +12,23 @@
                 var sortedGroups = StateService.AppState.SortGroupBy == "size" ? StateService.AppState.TypeGroups.OrderByDescending(g => g.Types.Count) : StateService.AppState.TypeGroups;
                 @foreach (var typeGroup in sortedGroups)
                 {
-                    <MudItem xs="12" sm="6" md="3" xl="2">
-                        <h3 style="text-align: center" class="mb-3 mt-3">@typeGroup.Name</h3>
-                        <MudExpansionPanels MultiExpansion="true">
-                            @foreach (var visualType in typeGroup.Types)
-                            {
-                                <VisualCtf.Client.Shared.Type VisualType="visualType" OnClick="OnTypeClicked"></VisualCtf.Client.Shared.Type>
-                            }
-                        </MudExpansionPanels>
-                    </MudItem>
+                    if (typeGroup.Types.Any(t => !t.IsHidden))
+                    {
+                        <MudItem xs="12" sm="6" md="3" xl="2">
+                            <h3 style="text-align: center" class="mb-3 mt-3">@typeGroup.Name</h3>
+                            <MudExpansionPanels MultiExpansion="true">
+                                @foreach (var visualType in typeGroup.Types.Where(t => !t.IsHidden))
+                                {
+                                    <VisualCtf.Client.Shared.Type VisualType="visualType" OnClick="OnTypeClicked"></VisualCtf.Client.Shared.Type>
+                                }
+                            </MudExpansionPanels>
+                        </MudItem>
+                    }
                 }
             }
             else
             {
-                @foreach (var visualType in StateService.AppState.Types)
+                @foreach (var visualType in StateService.AppState.Types.Where(t => !t.IsHidden))
                 {
                     <MudItem xs="12" sm="6" md="3" xl="2">
                         <VisualCtf.Client.Shared.Type VisualType="visualType" OnClick="OnTypeClicked"></VisualCtf.Client.Shared.Type>

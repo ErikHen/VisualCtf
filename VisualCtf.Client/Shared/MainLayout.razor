@@ -4,12 +4,14 @@
     <MudAppBar Elevation="1">
         <MudIconButton Icon="@Icons.Material.Filled.Menu" Color="Color.Inherit" Edge="Edge.Start" OnClick="@DrawerToggle" />
         <MudAppBarSpacer />
+        <SearchField />
+        <MudAppBarSpacer />
         <AuthorizeView>
             <Authorized>
                 @context.User.Identity?.Name &nbsp;<MudButton Variant="Variant.Filled" Color="Color.Secondary" Link="/account/logout/">Log out</MudButton>
             </Authorized>
             <NotAuthorized>
-                <LoginButton/>
+                <LoginButton />
             </NotAuthorized>
         </AuthorizeView>
     </MudAppBar>
