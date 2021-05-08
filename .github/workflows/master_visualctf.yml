@@ -3,6 +3,10 @@
 
 name: Build and deploy ASP.Net Core app to Azure Web App - visualctf
 
+defaults:
+  run:
+    working-directory: VisualCtf.Server
+    
 on:
   push:
     branches:
