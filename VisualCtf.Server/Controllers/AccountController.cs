@@ -39,12 +39,12 @@ namespace VisualCtf.Server.Controllers
 
         }
 
-        public async Task<IActionResult> Logout()
+        [Route("{ctfLogout?}")]
+        public async Task<IActionResult> Logout(bool ctfLogout = false)
         {
             //await _ctfService.RevokeToken(HttpContext.User.Claims.First(c => c.Type == "CtfToken").Value);
             await HttpContext.SignOutAsync();
-
-            return Redirect("/");
+            return Redirect(ctfLogout ? "https://be.contentful.com/logout" : "/");
         }
 
         [HttpGet]

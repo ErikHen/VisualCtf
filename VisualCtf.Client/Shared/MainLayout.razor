@@ -8,7 +8,15 @@
         <MudAppBarSpacer />
         <AuthorizeView>
             <Authorized>
-                @context.User.Identity?.Name &nbsp;<MudButton Variant="Variant.Filled" Color="Color.Secondary" Link="/account/logout/">Log out</MudButton>
+                <div class="d-flex">
+                    <div style="text-align: center">
+                        @context.User.Identity?.Name<br/>
+                        <a href="/account/logout/true" style="color: #fff; font-size: 12px;" >Switch user</a> 
+                    </div>
+                    <div class="ml-2">
+                        <MudButton Variant="Variant.Filled" Color="Color.Secondary" Link="/account/logout/">Log out</MudButton>
+                    </div>
+                </div>
             </Authorized>
             <NotAuthorized>
                 <LoginButton />
@@ -47,5 +55,6 @@
             AppbarBackground = Colors.Teal.Default,
         },
     };
+
 }
 

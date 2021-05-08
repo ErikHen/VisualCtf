@@ -22,7 +22,7 @@ namespace VisualCtf.Shared.Services
             foreach (var visualType in types)
             {
                 var nameAndId = visualType.Name.ToLower() + "|" + visualType.Id.ToLower();
-                if (nameAndId.Contains(st) || searchTerm == string.Empty)
+                if (nameAndId.Contains(st) || visualType.Fields.Any(f => (f.Name.ToLower() + "|" + f.Id.ToLower()).Contains(searchTerm)) || searchTerm == string.Empty)
                 {
                     visualType.IsHidden = false;
                 }

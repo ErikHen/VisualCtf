@@ -20,7 +20,7 @@ p a {
 
 .searchfield {
     background-color: white;
-    min-width: 250px;
+    min-width: 300px;
 }
     .searchfield .mud-input-control-margin-dense {
         margin: 0;
