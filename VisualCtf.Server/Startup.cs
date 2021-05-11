@@ -8,12 +8,14 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using System.Linq;
 using System.Net.Http;
+using Blazor.Analytics;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Components.Authorization;
 using MudBlazor.Services;
 using VisualCtf.Client.Services;
 using VisualCtf.Server.Services;
 using VisualCtf.Server.Services.CtfDelivery;
+using VisualCtf.Shared;
 using VisualCtf.Shared.Services;
 
 namespace VisualCtf.Server
@@ -48,6 +50,8 @@ namespace VisualCtf.Server
             services.AddScoped<AuthenticationStateProvider, CtfAuthStateProvider>();
             services.AddSingleton<ICtfService, Services.CtfService>();
             services.AddSingleton<IAppStateService, Services.AppStateService>();
+
+            services.AddGoogleAnalytics(Settings.GtagId);
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
