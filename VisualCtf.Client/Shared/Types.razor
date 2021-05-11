@@ -1,6 +1,7 @@
 ﻿@using VisualCtf.Shared.Services
 @using VisualCtf.Shared.Models
 @inject IAppStateService StateService
+@inject IJSRuntime JS
 
 @implements IDisposable
 
@@ -54,6 +55,7 @@
 
     void OnTypeClicked(string typeId)
     {
+        JS.InvokeVoidAsync("VisualCtfGtag", "select_content", new { content_type = "type", item_id = typeId.Remove(4) }); //anonymize typeId
         Highlight(typeId, HighlightType.Selected, true);
     }
 

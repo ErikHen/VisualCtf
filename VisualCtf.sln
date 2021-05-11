@@ -3,8 +3,6 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.30907.101
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "VisualCtf", "VisualCtf\VisualCtf.csproj", "{C896D7ED-FB9E-48D0-8125-E2AED7529724}"
-EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "VisualCtf.Shared", "VisualCtf.Shared\VisualCtf.Shared.csproj", "{8E20C94E-A084-411E-B584-4C0A8D5BD550}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "VisualCtf.Server", "VisualCtf.Server\VisualCtf.Server.csproj", "{5BA4A59E-3740-4EC1-9434-BAD18D00CF56}"
@@ -17,10 +15,6 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{C896D7ED-FB9E-48D0-8125-E2AED7529724}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{C896D7ED-FB9E-48D0-8125-E2AED7529724}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{C896D7ED-FB9E-48D0-8125-E2AED7529724}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{C896D7ED-FB9E-48D0-8125-E2AED7529724}.Release|Any CPU.Build.0 = Release|Any CPU
 		{8E20C94E-A084-411E-B584-4C0A8D5BD550}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{8E20C94E-A084-411E-B584-4C0A8D5BD550}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{8E20C94E-A084-411E-B584-4C0A8D5BD550}.Release|Any CPU.ActiveCfg = Release|Any CPU
