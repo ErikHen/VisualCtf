@@ -3,10 +3,11 @@
 @using VisualCtf.Shared.Models
 
 @inject ICtfService Ctf
-
 @inject ICtfDeliveryService CtfDelivery
 @inject IAppStateService StateService
 @inject AuthenticationStateProvider AuthenticationStateProvider
+@inject IAnalytics Analytics
+@inject IJSRuntime JS
 
 <MudPaper Elevation="0" Class="pa-5 mb-3">
     <MudGrid Spacing="2" Justify="Justify.FlexStart">
@@ -18,7 +19,7 @@
             <div class="d-flex justify-space-between">
                 @if (_appState?.Spaces != null)
                 {
-                    <MudSelect T="String" Label="Space" Strict="true" Variant="Variant.Outlined" Format="F2" ValueChanged="LoadTypes" SelectedValues="new HashSet<string>() {_appState.CurrentSpaceId}">
+                    <MudSelect T="String" Label="Space" Strict="true" Variant="Variant.Outlined" Format="F2" ValueChanged="NewSpaceSelected" SelectedValues="new HashSet<string>() {_appState.CurrentSpaceId}">
                         @foreach (var space in _appState.Spaces)
                         {
                             <MudSelectItem Value="@space.Id">@space.Name</MudSelectItem>
@@ -101,6 +102,11 @@
         }
     }
 
+    private async Task NewSpaceSelected(string spaceId)
+    {
+        await JS.InvokeVoidAsync("VisualCtfGtag", "select_content", new { content_type = "space", item_id = spaceId.Remove(4)}); //anonymize spaceId
+        await LoadTypes(spaceId);
+    }
 
     private async Task LoadTypes(string spaceId)
     {

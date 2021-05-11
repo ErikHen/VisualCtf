@@ -7,10 +7,12 @@ using System.Collections.Generic;
 using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
+using Blazor.Analytics;
 using Blazored.LocalStorage;
 using Microsoft.AspNetCore.Components.Authorization;
 using MudBlazor.Services;
 using VisualCtf.Client.Services;
+using VisualCtf.Shared;
 using VisualCtf.Shared.Services;
 
 namespace VisualCtf.Client
@@ -32,6 +34,7 @@ namespace VisualCtf.Client
             builder.Services.AddScoped<ICtfDeliveryService, CtfDeliveryService>();
             // builder.Services.AddBlazoredLocalStorage();
             builder.Services.AddMudServices();
+            builder.Services.AddGoogleAnalytics(Settings.GtagId);
 
             await builder.Build().RunAsync();
         }
