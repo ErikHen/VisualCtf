@@ -95,7 +95,7 @@
                 {
                     _appState = new(apiKey);
                     _appState.Spaces = await Ctf.GetSpaces(apiKey);
-                    await StateService.Set(_appState);
+                    StateService.Set(_appState);
                 }
                 this.StateHasChanged();
             }
@@ -104,8 +104,9 @@
 
     private async Task NewSpaceSelected(string spaceId)
     {
-        await JS.InvokeVoidAsync("VisualCtfGtag", "select_content", new { content_type = "space", item_id = spaceId.Remove(4)}); //anonymize spaceId
         await LoadTypes(spaceId);
+        await JS.InvokeVoidAsync("VisualCtfGtag", "select_content", new { content_type = "space", item_id = spaceId.Remove(4)}); //anonymize spaceId
+
     }
 
     private async Task LoadTypes(string spaceId)
@@ -119,7 +120,7 @@
         {
             _appState.TypeNameMapping.Add(type.Id, type.Name);
         }
-        await StateService.Set(_appState);
+        StateService.Set(_appState);
         showLoader = false;
     }
 

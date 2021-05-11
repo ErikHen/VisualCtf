@@ -5,6 +5,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Services\AppStateService.cs" />
     <Compile Remove="Services\CtfDelivery\SeoInfo.cs" />
   </ItemGroup>
 

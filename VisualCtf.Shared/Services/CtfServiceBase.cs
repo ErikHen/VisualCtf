@@ -9,7 +9,7 @@ namespace VisualCtf.Shared.Services
 {
     public abstract class CtfServiceBase
     {
-        public virtual async Task<User> GetUser(string key)
+        public virtual Task<User> GetUser(string key)
         {
             throw new NotImplementedException();
         }

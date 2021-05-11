@@ -6,6 +6,10 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Services\AppStateService.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
     <Content Remove="wwwroot\index.html" />
     <Content Remove="wwwroot\service-worker.js" />
     <Content Remove="wwwroot\service-worker.published.js" />

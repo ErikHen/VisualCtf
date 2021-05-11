@@ -49,7 +49,7 @@ namespace VisualCtf.Server
             services.AddScoped<IAuthService, Services.AuthService>();
             services.AddScoped<AuthenticationStateProvider, CtfAuthStateProvider>();
             services.AddSingleton<ICtfService, Services.CtfService>();
-            services.AddSingleton<IAppStateService, Services.AppStateService>();
+            services.AddSingleton<IAppStateService, AppStateService>();
 
             services.AddGoogleAnalytics(Settings.GtagId);
         }

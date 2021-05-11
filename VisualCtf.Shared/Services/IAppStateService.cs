@@ -11,8 +11,6 @@ namespace VisualCtf.Shared.Services
     {
         event Action OnChange;
         AppState AppState { get; }
-        Task Set(AppState state);
-
-        bool IsServer { get; }
+        void Set(AppState state);
     }
 }

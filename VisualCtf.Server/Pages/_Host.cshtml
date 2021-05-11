@@ -42,10 +42,7 @@
     <script src="_framework/blazor.webassembly.js"></script>
     <script src="_content/MudBlazor/MudBlazor.min.js"></script>
     @*<script>navigator.serviceWorker.register('service-worker.js');</script>*@
-    @*@if (Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT") != Environments.Development)
-    {*@
-        <script src="_content/Blazor-Analytics/blazor-analytics.js"></script>
-    @*}*@
+    <script src="_content/Blazor-Analytics/blazor-analytics.js"></script>
 
     <script>
         window.VisualCtfGtag = function (eventName, eventData) {
