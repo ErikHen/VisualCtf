@@ -6,7 +6,7 @@
 @if (!string.IsNullOrWhiteSpace(StateService.AppState?.CurrentSpaceId))
 {
     <div class="searchfield">
-        <MudTextField @bind-Value="@SearchTerm" Label="Search for type or field " Variant="Variant.Filled" DebounceInterval="100" Margin="Margin.Dense"></MudTextField>
+        <MudTextField @bind-Value="@SearchTerm" Label="Search for type or field " Variant="Variant.Filled" DebounceInterval="50" Margin="Margin.Dense"></MudTextField>
     </div>
 }
 

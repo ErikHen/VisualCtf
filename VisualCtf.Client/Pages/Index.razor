@@ -7,7 +7,6 @@
 @inject IAppStateService StateService
 @inject AuthenticationStateProvider AuthenticationStateProvider
 @inject IAnalytics Analytics
-@inject IJSRuntime JS
 
 <MudPaper Elevation="0" Class="pa-5 mb-3">
     <MudGrid Spacing="2" Justify="Justify.FlexStart">
@@ -105,7 +104,9 @@
     private async Task NewSpaceSelected(string spaceId)
     {
         await LoadTypes(spaceId);
-        await JS.InvokeVoidAsync("VisualCtfGtag", "select_content", new { content_type = "space", item_id = spaceId.Remove(4)}); //anonymize spaceId
+        await Analytics.TrackEvent("select_content", new { content_type = "space", item_id = spaceId.Remove(4) }); //anonymize spaceId
+        
+        //await JS.InvokeVoidAsync("VisualCtfGtag", "select_content", new { content_type = "space", item_id = spaceId.Remove(4)}); //anonymize spaceId
 
     }
 
