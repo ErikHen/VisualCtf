@@ -2,13 +2,13 @@
 @inject IAppStateService StateService
 @inject ICtfService Ctf
 
-<MudExpansionPanel Text="SETTINGS" HideIcon="true" Class=" mud-typography-body1">
+<MudExpansionPanel HideIcon="true" Class=" mud-typography-body1">
     <TitleContent>
         @*<MudTooltip Text="Show/hide settings" Placement="Placement.Top">*@
-            <div class="d-flex">
-                <MudIcon Icon="@Icons.Material.Filled.Settings" class="mr-2"></MudIcon>
-                <MudText><strong>SETTINGS</strong></MudText>
-            </div>
+        <div class="d-flex flex-row-reverse">
+            <MudIcon Icon="@Icons.Material.Filled.Settings" class="ml-2"></MudIcon>
+            <MudText><strong>SETTINGS</strong></MudText>
+        </div>
         @*</MudTooltip>*@
     </TitleContent>
     <ChildContent>

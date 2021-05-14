@@ -18,13 +18,13 @@ p a {
     text-decoration: underline;
 }
 
-.searchfield {
+/*.searchfield {
     background-color: white;
     min-width: 200px;
 }
     .searchfield .mud-input-control-margin-dense {
         margin: 0;
-    }
+    }*/
 
 
 .loading {
